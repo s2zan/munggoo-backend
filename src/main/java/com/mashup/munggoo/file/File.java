@@ -1,6 +1,5 @@
 package com.mashup.munggoo.file;
 
-import com.mashup.munggoo.device.Device;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,10 +18,6 @@ public class File {
 
     @Column(nullable = false)
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "device_id")
-    private Device device;
 
     public File(FileDto fileDto) {
         this.deviceId = fileDto.getDeviceId();

@@ -1,6 +1,5 @@
 package com.mashup.munggoo.highlight;
 
-import com.mashup.munggoo.file.File;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,10 +30,6 @@ public class Highlight {
 
     @Column(nullable = false)
     private int priority;
-
-    @ManyToOne
-    @JoinColumn(name = "file_id")
-    private File file;
 
     public Highlight(HighlightDto highlightDto) {
         this.fileId = highlightDto.getFileId();

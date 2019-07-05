@@ -1,6 +1,5 @@
 package com.mashup.munggoo.quiz;
 
-import com.mashup.munggoo.file.File;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,10 +24,6 @@ public class Quiz {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "file_id")
-    private File file;
 
     public Quiz(QuizDto quizDto) {
         this.fileId = quizDto.getFileId();
