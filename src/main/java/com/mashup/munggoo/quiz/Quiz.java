@@ -25,14 +25,10 @@ public class Quiz {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    public Quiz(QuizDto quizDto) {
-        this.fileId = quizDto.getFileId();
-        this.startIndex = quizDto.getStartIndex();
-        this.endIndex = quizDto.getEndIndex();
-        this.content = quizDto.getContent();
-    }
-
-    public static Quiz from(QuizDto quizDto) {
-        return new Quiz(quizDto);
+    public Quiz(Long fileId, Long startIndex, Long endIndex, String content) {
+        this.fileId = fileId;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.content = content;
     }
 }
