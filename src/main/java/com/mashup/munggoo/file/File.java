@@ -19,12 +19,8 @@ public class File {
     @Column(nullable = false)
     private String name;
 
-    public File(FileDto fileDto) {
-        this.deviceId = fileDto.getDeviceId();
-        this.name = fileDto.getName();
-    }
-
-    public static File from(FileDto fileDto) {
-        return new File(fileDto);
+    public File(Long deviceId, String name) {
+        this.deviceId = deviceId;
+        this.name = name;
     }
 }

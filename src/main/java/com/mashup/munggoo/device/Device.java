@@ -22,11 +22,8 @@ public class Device {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Device(DeviceDto deviceDto) {
-        this.deviceKey = deviceDto.getDeviceKey();
-    }
-
-    public static Device from(DeviceDto deviceDto) {
-        return new Device(deviceDto);
+    public Device(String deviceKey, LocalDateTime createdAt) {
+        this.deviceKey = deviceKey;
+        this.createdAt = createdAt;
     }
 }
