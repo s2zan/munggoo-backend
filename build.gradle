@@ -3,17 +3,12 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.mashup'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 repositories {
     mavenCentral()
@@ -22,9 +17,12 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
     compileOnly 'org.projectlombok:lombok'
-    implementation group:'com.h2database', name: 'h2', version: '1.4.197'
-    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.2.1'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.2.1'
+    implementation group: 'com.h2database', name: 'h2', version: '1.4.196'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
