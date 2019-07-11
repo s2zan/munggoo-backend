@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -32,5 +34,13 @@ public class FileRepositoryTest {
     public void existsFileByFileName() {
         fileRepository.save(file);
         assertThat(fileRepository.existsByName(reqFileDto.getName())).isTrue();
+    }
+
+    @Test
+    public void findFileByDeviceId() {
+        fileRepository.save(file);
+        List<File> files = fileRepository.findByDeviceId(deviceId);
+        assertThat(files.get(0).getDeviceId()).isEqualTo(deviceId);
+        assertThat(files.get(0).getName()).isEqualTo(reqFileDto.getName());
     }
 }
