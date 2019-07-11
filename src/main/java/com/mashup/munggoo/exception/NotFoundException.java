@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
-public class ConflictException extends BaseException {
-    public ConflictException(String msg) {
-        this(HttpStatus.CONFLICT.value(), msg);
+public class NotFoundException extends BaseException {
+    public NotFoundException(String msg) {
+        this(HttpStatus.NOT_FOUND.value(), msg);
     }
 
-    public ConflictException(Integer code, String msg)  {
+    public NotFoundException(Integer code, String msg) {
         super(ErrorModel.builder()
                 .code(code)
                 .msg(msg)

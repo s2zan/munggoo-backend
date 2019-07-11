@@ -1,7 +1,5 @@
-package com.mashup.munggoo.Device;
+package com.mashup.munggoo.device;
 
-import com.mashup.munggoo.device.Device;
-import com.mashup.munggoo.device.ReqDeviceDto;
 import org.junit.Before;
 import org.junit.Test;
 
