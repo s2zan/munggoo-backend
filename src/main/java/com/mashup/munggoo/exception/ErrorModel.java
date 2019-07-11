@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
 public class ErrorModel {
     private Integer code;
