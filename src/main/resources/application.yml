@@ -1,57 +1,18 @@
 spring:
-  profiles: prod
-  datasource:
-    url: jdbc:mariadb://${MARIADB_URL}?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    username: ${USER_NAME}
-    password: ${USER_PASSWORD}
-    driver-class-name: org.mariadb.jdbc.Driver
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    open-in-view: false
-    hibernate:
-      ddl-auto: validate
-
----
-
-spring:
-  profiles: test
-  datasource:
-    platform: h2
-    url: jdbc:h2:mem:testdb;MVCC=TRUE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
-  jpa:
-    database-platform: H2
-    show-sql: true
-    open-in-view: false
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
+  profiles:
+    active: local
 
 ---
 
 spring:
   profiles: local
-  datasource:
-    platform: h2
-    hikari:
-      jdbc-url: jdbc:h2:tcp://localhost:9092/mem:testdb;MVCC=TRUE
-      username: sa
-      password:
-      driver-class-name: org.h2.Driver
-
   jpa:
-    database-platform: H2
     show-sql: true
-    generate-ddl: true
-    open-in-view: false
     hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+server:
+  port: 8083
+
