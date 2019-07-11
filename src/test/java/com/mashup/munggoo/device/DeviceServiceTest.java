@@ -40,6 +40,6 @@ public class DeviceServiceTest {
     @Test(expected = ConflictException.class)
     public void saveDuplicatedDevice() {
         given(deviceRepository.existsByDeviceKey(any())).willReturn(Boolean.TRUE);
-        when(deviceService.save(reqDeviceDto)).thenThrow(ConflictException.class);
+        deviceService.save(reqDeviceDto);
     }
 }

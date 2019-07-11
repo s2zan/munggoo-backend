@@ -48,9 +48,9 @@ public class DeviceControllerTest {
                     .content(objectMapper.writeValueAsString(reqDeviceDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.id").hasJsonPath())
                 .andExpect(jsonPath("$.deviceKey").value(reqDeviceDto.getDeviceKey()))
-                .andExpect(jsonPath("$.createdAt").exists())
+                .andExpect(jsonPath("$.createdAt").hasJsonPath())
                 .andDo(print());
     }
 
