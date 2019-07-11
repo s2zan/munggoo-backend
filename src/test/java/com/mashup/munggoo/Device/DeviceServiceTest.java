@@ -36,15 +36,14 @@ public class DeviceServiceTest {
 
     @Test
     public void saveDevice() {
-        given(deviceRepository.findByDeviceKey(any())).willReturn(null);
+        given(deviceRepository.existsByDeviceKey(reqDeviceDto.getDeviceKey())).willReturn(Boolean.FALSE);
         given(deviceRepository.save(any())).willReturn(Device.from(reqDeviceDto));
         assertThat(deviceService.save(reqDeviceDto).getDeviceKey()).isEqualTo(reqDeviceDto.getDeviceKey());
     }
 
     @Test(expected = ConflictException.class)
     public void saveDuplicatedDevice() {
-        given(deviceRepository.findByDeviceKey(any())).willReturn(Device.from(reqDeviceDto));
-        when(deviceRepository.findByDeviceKey(any()).getDeviceKey().equals(reqDeviceDto.getDeviceKey())).thenThrow(new ConflictException());
-        deviceService.save(reqDeviceDto);
+        given(deviceRepository.existsByDeviceKey(any())).willReturn(Boolean.TRUE);
+        when(deviceService.save(reqDeviceDto)).thenThrow(ConflictException.class);
     }
 }

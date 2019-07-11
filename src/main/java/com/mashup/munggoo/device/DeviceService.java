@@ -10,10 +10,13 @@ public class DeviceService {
     private final DeviceRepository deviceRepository;
 
     public Device save(ReqDeviceDto reqDeviceDto) {
-        Device device = deviceRepository.findByDeviceKey(reqDeviceDto.getDeviceKey());
-        if (device != null) {
+        if (isDeviceKey(reqDeviceDto.getDeviceKey())) {
             throw new ConflictException("Duplicated Device.");
         }
         return deviceRepository.save(Device.from(reqDeviceDto));
+    }
+
+    private boolean isDeviceKey(String deviceKey) {
+        return deviceRepository.existsByDeviceKey(deviceKey);
     }
 }

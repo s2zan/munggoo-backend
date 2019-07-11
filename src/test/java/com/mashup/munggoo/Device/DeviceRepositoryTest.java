@@ -33,6 +33,11 @@ public class DeviceRepositoryTest {
 
     @Test
     public void findDeviceByDeviceKey() {
-        assertThat(deviceRepository.findByDeviceKey(device.getDeviceKey())).isEqualTo(savedDevice);
+        assertThat(deviceRepository.findByDeviceKey(reqDeviceDto.getDeviceKey())).isEqualTo(savedDevice);
+    }
+
+    @Test
+    public void existsDeviceByDeviceKey() {
+        assertThat(deviceRepository.existsByDeviceKey(reqDeviceDto.getDeviceKey())).isTrue();
     }
 }
