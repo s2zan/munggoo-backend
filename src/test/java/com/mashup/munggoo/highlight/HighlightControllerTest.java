@@ -1,6 +1,7 @@
 package com.mashup.munggoo.highlight;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashup.munggoo.exception.BadRequestException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +72,21 @@ public class HighlightControllerTest {
                 .andExpect(jsonPath("$.[1].content").value(reqHighlightDtos.get(1).getContent()))
                 .andExpect(jsonPath("$.[1].type").value(HighlightType.SENTENCE.toString()))
                 .andExpect(jsonPath("$.[1].isImportant").value(Boolean.FALSE))
+                .andDo(print());
+    }
+
+    @Test
+    public void saveEmptyHighlight() throws Exception {
+        reqHighlightDtos = new ArrayList<>();
+        when(highlightService.save(any(), any())).thenThrow(new BadRequestException("Request Body Is Empty."));
+        mockMvc.perform(post("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .content(objectMapper.writeValueAsString(reqHighlightDtos)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.msg").value("Request Body Is Empty."))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andDo(print());
     }
 }
