@@ -9,8 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 public class Highlight {
-    public enum HightlightType { WORD, SENTENCE }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,17 +27,21 @@ public class Highlight {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private HightlightType type;
+    private HighlightType type;
 
     @Column(name = "is_important", nullable = false)
     private Boolean isImportant;
 
-    public Highlight(Long fileId, Long startIndex, Long endIndex, String content, HightlightType type, Boolean isImportant) {
+    public Highlight(Long fileId, ReqHighlightDto reqHighlightDto) {
         this.fileId = fileId;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
-        this.content = content;
-        this.type = type;
-        this.isImportant = isImportant;
+        this.startIndex = reqHighlightDto.getStartIndex();
+        this.endIndex = reqHighlightDto.getEndIndex();
+        this.content = reqHighlightDto.getContent();
+        this.type = reqHighlightDto.stringToEnum(reqHighlightDto.getContent());
+        this.isImportant = reqHighlightDto.integerToBoolean(reqHighlightDto.getIsImportant());
+    }
+
+    public static Highlight from(Long fileId, ReqHighlightDto reqHighlightDto) {
+        return new Highlight(fileId, reqHighlightDto);
     }
 }
