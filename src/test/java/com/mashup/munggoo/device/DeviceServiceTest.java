@@ -1,9 +1,5 @@
-package com.mashup.munggoo.Device;
+package com.mashup.munggoo.device;
 
-import com.mashup.munggoo.device.Device;
-import com.mashup.munggoo.device.DeviceRepository;
-import com.mashup.munggoo.device.DeviceService;
-import com.mashup.munggoo.device.ReqDeviceDto;
 import com.mashup.munggoo.exception.ConflictException;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +40,6 @@ public class DeviceServiceTest {
     @Test(expected = ConflictException.class)
     public void saveDuplicatedDevice() {
         given(deviceRepository.existsByDeviceKey(any())).willReturn(Boolean.TRUE);
-        when(deviceService.save(reqDeviceDto)).thenThrow(ConflictException.class);
+        deviceService.save(reqDeviceDto);
     }
 }

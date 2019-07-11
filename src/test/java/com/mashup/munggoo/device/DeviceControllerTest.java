@@ -1,10 +1,6 @@
-package com.mashup.munggoo.Device;
+package com.mashup.munggoo.device;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashup.munggoo.device.Device;
-import com.mashup.munggoo.device.DeviceController;
-import com.mashup.munggoo.device.DeviceService;
-import com.mashup.munggoo.device.ReqDeviceDto;
 import com.mashup.munggoo.exception.ConflictException;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +48,9 @@ public class DeviceControllerTest {
                     .content(objectMapper.writeValueAsString(reqDeviceDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.deviceKey").value("qwer1234"))
+                .andExpect(jsonPath("$.id").hasJsonPath())
+                .andExpect(jsonPath("$.deviceKey").value(reqDeviceDto.getDeviceKey()))
+                .andExpect(jsonPath("$.createdAt").hasJsonPath())
                 .andDo(print());
     }
 

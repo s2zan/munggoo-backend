@@ -16,11 +16,15 @@ public class File {
     @Column(name = "device_id", nullable = false)
     private Long deviceId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    public File(Long deviceId, String name) {
+    public File(Long deviceId, ReqFileDto reqFileDto) {
         this.deviceId = deviceId;
-        this.name = name;
+        this.name = reqFileDto.getName();
+    }
+
+    public static File from(Long deviceId, ReqFileDto reqFileDto) {
+        return new File(deviceId, reqFileDto);
     }
 }

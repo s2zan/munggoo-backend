@@ -16,6 +16,8 @@ public class RestExceptionHandler {
         ErrorModel errorModel = baseException.errorModel;
         log.error("Rest api error: {}", errorModel.getMsg());
         switch (errorModel.getCode()) {
+            case 404:
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorModel);
             case 409:
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(errorModel);
             default:
