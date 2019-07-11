@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface FileRepository extends JpaRepository<File, Long> {
     Boolean existsByName(String name);
+
     List<File> findByDeviceId(Long deviceId);
 }

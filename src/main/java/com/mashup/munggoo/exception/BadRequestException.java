@@ -9,7 +9,7 @@ public class BadRequestException extends BaseException {
         this(HttpStatus.BAD_REQUEST.value(), msg);
     }
 
-    public BadRequestException(Integer code, String msg)  {
+    public BadRequestException(Integer code, String msg) {
         super(ErrorModel.builder()
                 .code(code)
                 .msg(msg)

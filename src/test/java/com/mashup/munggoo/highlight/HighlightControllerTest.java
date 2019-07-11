@@ -53,8 +53,8 @@ public class HighlightControllerTest {
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         when(highlightService.save(any(), any())).thenReturn(highlights);
         mockMvc.perform(post("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(objectMapper.writeValueAsString(reqHighlightDtos)))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .content(objectMapper.writeValueAsString(reqHighlightDtos)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[0].id").hasJsonPath())

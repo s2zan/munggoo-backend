@@ -9,7 +9,7 @@ public class ConflictException extends BaseException {
         this(HttpStatus.CONFLICT.value(), msg);
     }
 
-    public ConflictException(Integer code, String msg)  {
+    public ConflictException(Integer code, String msg) {
         super(ErrorModel.builder()
                 .code(code)
                 .msg(msg)
