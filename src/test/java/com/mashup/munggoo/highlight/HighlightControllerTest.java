@@ -2,6 +2,7 @@ package com.mashup.munggoo.highlight;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashup.munggoo.exception.BadRequestException;
+import com.mashup.munggoo.exception.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,6 +39,8 @@ public class HighlightControllerTest {
     private List<ReqHighlightDto> reqHighlightDtos;
 
     private List<Highlight> highlights;
+
+    private List<ResHighlightDto> resHighlightDtos;
 
     private ObjectMapper objectMapper;
 
@@ -86,6 +90,44 @@ public class HighlightControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.msg").value("Request Body Is Empty."))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andDo(print());
+    }
+
+    @Test
+    public void getHighlights() throws Exception {
+        reqHighlightDtos = new ArrayList<>();
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
+        resHighlightDtos = highlights.stream().map(ResHighlightDto::new).collect(Collectors.toList());
+        when(highlightService.getHighlights(fileId)).thenReturn(resHighlightDtos);
+        mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[0].id").hasJsonPath())
+                .andExpect(jsonPath("$.[0].startIndex").value(reqHighlightDtos.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.[0].endIndex").value(reqHighlightDtos.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.[0].content").value(reqHighlightDtos.get(0).getContent()))
+                .andExpect(jsonPath("$.[0].isImportant").value(Boolean.TRUE))
+                .andExpect(jsonPath("$.[1].id").hasJsonPath())
+                .andExpect(jsonPath("$.[1].startIndex").value(reqHighlightDtos.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.[1].endIndex").value(reqHighlightDtos.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.[1].content").value(reqHighlightDtos.get(1).getContent()))
+                .andExpect(jsonPath("$.[1].isImportant").value(Boolean.FALSE))
+                .andDo(print());
+    }
+
+    @Test
+    public void getEmptyHighlight() throws Exception {
+        when(highlightService.getHighlights(any())).thenThrow(new NotFoundException("Highlight Does Not Exist."));
+        mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.msg").value("Highlight Does Not Exist."))
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andDo(print());
     }
