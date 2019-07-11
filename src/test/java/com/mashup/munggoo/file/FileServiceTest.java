@@ -33,8 +33,6 @@ public class FileServiceTest {
 
     private ReqFileDto reqFileDto;
 
-    private ResFileDto resFileDto;
-
     @Before
     public void setUp() {
         deviceId = 1L;
