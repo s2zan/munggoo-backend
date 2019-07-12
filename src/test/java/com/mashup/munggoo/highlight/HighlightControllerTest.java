@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,6 +33,8 @@ public class HighlightControllerTest {
     @MockBean
     private HighlightService highlightService;
 
+    private Long id;
+
     private Long fileId;
 
     private List<ReqHighlightDto> reqHighlightDtos;
@@ -46,6 +47,7 @@ public class HighlightControllerTest {
 
     @Before
     public void setUp() {
+        id = 1L;
         fileId = 1L;
         objectMapper = new ObjectMapper();
     }
@@ -123,6 +125,38 @@ public class HighlightControllerTest {
     public void getEmptyHighlight() throws Exception {
         when(highlightService.getHighlights(any())).thenThrow(new NotFoundException("Highlight Does Not Exist."));
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.msg").value("Highlight Does Not Exist."))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andDo(print());
+    }
+
+    @Test
+    public void deleteHighlight() throws Exception {
+        ReqHighlightDto reqHighlightDto = new ReqHighlightDto(10L, 20L, "안녕", 1);
+        Highlight highlight = Highlight.from(fileId, reqHighlightDto);
+        when(highlightService.deleteHighlight(id)).thenReturn(highlight);
+        mockMvc.perform(delete("/v1/devices/{device-id}/files/{file-id}/highlights/{highlight-id}", 1L, fileId, 1L)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").hasJsonPath())
+                .andExpect(jsonPath("$.fileId").value(highlight.getFileId()))
+                .andExpect(jsonPath("$.startIndex").value(highlight.getStartIndex()))
+                .andExpect(jsonPath("$.endIndex").value(highlight.getEndIndex()))
+                .andExpect(jsonPath("$.content").value(highlight.getContent()))
+                .andExpect(jsonPath("$.type").value(highlight.getType().toString()))
+                .andExpect(jsonPath("$.isImportant").value(highlight.getIsImportant()))
+                .andDo(print());
+    }
+
+    @Test
+    public void deleteEmptyHighlight() throws Exception {
+        when(highlightService.deleteHighlight(any())).thenThrow(new NotFoundException("Highlight Does Not Exist."));
+        mockMvc.perform(delete("/v1/devices/{device-id}/files/{file-id}/highlights/{highlight-id}", 1L, fileId, 1L)
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
