@@ -39,4 +39,12 @@ public class QuizService {
         return quizRepository.saveAll(quizList);
     }
 
+    public List<Quiz> getQuiz(Long fileId){
+        List<Quiz> quizzes = quizRepository.findByFileId(fileId);
+        if (quizzes.isEmpty()) {
+            throw new NotFoundException("Quiz Does Not Exist.");
+        }
+        return quizzes;
+    }
+
 }

@@ -33,4 +33,10 @@ public class QuizController {
         return ResponseEntity.status(HttpStatus.OK).body(result.stream().map(ResQuizDto::new).collect(Collectors.toList()));
     }
 
+    @GetMapping("/re")
+    public ResponseEntity<List<ResQuizDto>> retakeQuiz(@PathVariable(value="device-id") Long deviceId,
+                                                       @PathVariable(value="file-id") Long fileId){
+        return ResponseEntity.status(HttpStatus.OK).body(quizService.getQuiz(fileId).stream().map(ResQuizDto::new).collect(Collectors.toList()));
+    }
+
 }
