@@ -22,4 +22,9 @@ public class HighlightController {
     public ResponseEntity<List<ResHighlightDto>> getHighlights(@PathVariable(value = "file-id") Long fileId) {
         return ResponseEntity.status(HttpStatus.OK).body(highlightService.getHighlights(fileId));
     }
+
+    @DeleteMapping(value = "/{highlight-id}")
+    public ResponseEntity deleteHighlight(@PathVariable(value = "highlight-id") Long highlightId) {
+        return ResponseEntity.status(HttpStatus.OK).body(highlightService.deleteHighlight(highlightId));
+    }
 }
