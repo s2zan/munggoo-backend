@@ -73,10 +73,10 @@ public class QuizServiceTest {
         quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
         quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
         quizService.save(quizzes);
-        List<Quiz> temp = quizRepository.findByFileId(fileId);
+        List<Quiz> temp = quizRepository.findByFileIdOrderByStartIndex(fileId);
         assertThat(temp.size()).isEqualTo(2);
         quizService.delete(fileId);
-        assertThat(quizRepository.findByFileId(fileId).size()).isEqualTo(0);
+        assertThat(quizRepository.findByFileIdOrderByStartIndex(fileId).size()).isEqualTo(0);
     }
 
     @Test
@@ -94,4 +94,19 @@ public class QuizServiceTest {
         quizService.getQuiz(fileId);
     }
 
+    @Test
+    public void marking(){
+
+        quizDtos = new ArrayList<>();
+        quizDtos.add(new QuizDto(fileId, 1L, 10L, "hello"));
+        quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
+        quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
+        quizService.save(quizzes);
+
+        List<ReqResultDto> reqResultDtos= new ArrayList<>();
+        reqResultDtos.add(new ReqResultDto("Hello"));
+        reqResultDtos.add(new ReqResultDto("안녕"));
+
+        quizService.marking(fileId, reqResultDtos);
+    }
 }
