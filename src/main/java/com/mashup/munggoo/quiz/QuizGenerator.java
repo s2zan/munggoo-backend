@@ -38,9 +38,9 @@ public class QuizGenerator {
 
             KomoranResult analyzeResultList = komoran.analyze(highlight.getContent());
             List<Token> tokenList = analyzeResultList.getTokenList();
-            GeneratedQuiz generatedQuiz = selectWords(tokenList);
+            GeneratedQuizDto generatedQuizDto = selectWords(tokenList);
             List<QuizDto> quizList = new ArrayList<>();
-            for(Token word : generatedQuiz.selected){
+            for(Token word : generatedQuizDto.selected){
                 quizList.add(tokenToQuizDto(word, highlight));
             }
             if(highlight.getIsImportant()) {
@@ -49,16 +49,16 @@ public class QuizGenerator {
                     selectedQuiz.add(Quiz.from(quizList.get(selectOne)));
                     quizList.remove(selectOne);
                 }
-                else if(generatedQuiz.preliminary.size() > 0) {
-                    int selectOne = r.nextInt(generatedQuiz.preliminary.size());
-                    selectedQuiz.add(tokenToQuiz(generatedQuiz.preliminary.get(selectOne), highlight));
-                    generatedQuiz.preliminary.remove(selectOne);
+                else if(generatedQuizDto.preliminary.size() > 0) {
+                    int selectOne = r.nextInt(generatedQuizDto.preliminary.size());
+                    selectedQuiz.add(tokenToQuiz(generatedQuizDto.preliminary.get(selectOne), highlight));
+                    generatedQuizDto.preliminary.remove(selectOne);
                 }
 
             }
             candidateQuiz.addAll(quizList);
             if(selectedQuiz.size()+candidateQuiz.size() < QuizConfig.quizNum) {
-                for(Token word : generatedQuiz.preliminary){
+                for(Token word : generatedQuizDto.preliminary){
                     preliminaryQuiz.add(tokenToQuizDto(word, highlight));
                 }
             }
@@ -93,8 +93,8 @@ public class QuizGenerator {
         return selectedQuiz;
     }
 
-    private static GeneratedQuiz selectWords(List<Token> tokenList){
-        GeneratedQuiz result = new GeneratedQuiz();
+    private static GeneratedQuizDto selectWords(List<Token> tokenList){
+        GeneratedQuizDto result = new GeneratedQuizDto();
         Stack<Token> tokenStack = new Stack<>();
 
         for(Token token : tokenList){

@@ -1,5 +1,6 @@
 package com.mashup.munggoo.quiz;
 
+import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,11 +42,30 @@ public class QuizService {
     }
 
     public List<Quiz> getQuiz(Long fileId){
-        List<Quiz> quizzes = quizRepository.findByFileId(fileId);
+        List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
         if (quizzes.isEmpty()) {
             throw new NotFoundException("Quiz Does Not Exist.");
         }
         return quizzes;
+    }
+
+    public ScoreDto marking(Long fileId, List<ReqResultDto> reqResultDtos){
+        List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
+
+        if (quizzes.isEmpty()) {
+            throw new NotFoundException("Quiz Does Not Exist.");
+        }
+        if(quizzes.size() != reqResultDtos.size()){
+            throw new ConflictException("User answer doesn't match with the quiz.");
+        }
+
+        List<AnswerDto> answerDtos = new ArrayList<>();
+
+        for(int i = 0; i< quizzes.size(); i++){
+            answerDtos.add(new AnswerDto(reqResultDtos.get(i), quizzes.get(i)));
+        }
+
+        return new ScoreDto(answerDtos);
     }
 
 }

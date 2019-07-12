@@ -7,5 +7,5 @@ import java.util.List;
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
     Boolean existsQuizzesByFileId(Long fileId);
     void deleteQuizzesByFileId(Long fileId);
-    List<Quiz> findByFileId(Long fileId);
+    List<Quiz> findByFileIdOrderByStartIndex(Long fileId);
 }

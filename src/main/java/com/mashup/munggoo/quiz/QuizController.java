@@ -6,10 +6,7 @@ import com.mashup.munggoo.highlight.ResHighlightDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,13 @@ public class QuizController {
     public ResponseEntity<List<ResQuizDto>> retakeQuiz(@PathVariable(value="device-id") Long deviceId,
                                                        @PathVariable(value="file-id") Long fileId){
         return ResponseEntity.status(HttpStatus.OK).body(quizService.getQuiz(fileId).stream().map(ResQuizDto::new).collect(Collectors.toList()));
+    }
+
+    @PostMapping
+    public ResponseEntity<ScoreDto> quizResult(@PathVariable(value="device-id") Long deviceId,
+                                               @PathVariable(value="file-id") Long fileId,
+                                               @RequestBody List<ReqResultDto> reqResultDtos){
+        return ResponseEntity.status(HttpStatus.OK).body(quizService.marking(fileId, reqResultDtos));
     }
 
 }
