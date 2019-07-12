@@ -61,4 +61,18 @@ public class QuizControllerTest {
                 .andDo(print());
 
     }
+
+    @Test
+    public void retakeQuiz() throws Exception{
+        when(quizService.getQuiz(any())).thenReturn(quizzes);
+        mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz/re", 1L, fileId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[0].startIndex").value(highlightForQuizDtos.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.[0].endIndex").value(highlightForQuizDtos.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.[1].startIndex").value(highlightForQuizDtos.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.[1].endIndex").value(highlightForQuizDtos.get(1).getEndIndex()))
+                .andDo(print());
+    }
 }

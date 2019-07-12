@@ -1,5 +1,6 @@
 package com.mashup.munggoo.quiz;
 
+import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
 import com.mashup.munggoo.highlight.ReqHighlightDto;
@@ -12,9 +13,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -63,14 +67,31 @@ public class QuizServiceTest {
 
     @Test
     public void save_delete(){
+        quizService.delete(fileId);
         quizDtos = new ArrayList<>();
         quizDtos.add(new QuizDto(fileId, 1L, 10L, "hello"));
         quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
         quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
         quizService.save(quizzes);
-        assertThat(quizRepository.findByFileId(fileId).size()).isEqualTo(2);
+        List<Quiz> temp = quizRepository.findByFileId(fileId);
+        assertThat(temp.size()).isEqualTo(2);
         quizService.delete(fileId);
         assertThat(quizRepository.findByFileId(fileId).size()).isEqualTo(0);
+    }
+
+    @Test
+    public void getQuiz(){
+        quizDtos = new ArrayList<>();
+        quizDtos.add(new QuizDto(fileId, 1L, 10L, "hello"));
+        quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
+        quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
+        quizService.save(quizzes);
+        assertThat(quizService.getQuiz(fileId).size()).isEqualTo(quizzes.size());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getEmptyQuiz() {
+        quizService.getQuiz(fileId);
     }
 
 }
