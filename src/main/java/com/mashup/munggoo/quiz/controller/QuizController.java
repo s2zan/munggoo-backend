@@ -26,13 +26,7 @@ public class QuizController {
     @GetMapping
     public ResponseEntity<List<ResQuizDto>> createQuiz(@PathVariable(value="device-id") Long deviceId,
                                                        @PathVariable(value="file-id") Long fileId){
-        List<Highlight> highlightList = highlightForQuizService.getHighlights(fileId);
-
-        quizService.delete(fileId);
-
-        List<Quiz> result = quizService.save(QuizGenerator.generateQuizSet(highlightList));
-
-        return ResponseEntity.status(HttpStatus.OK).body(result.stream().map(ResQuizDto::new).collect(Collectors.toList()));
+        return ResponseEntity.status(HttpStatus.OK).body(quizService.createQuiz(fileId).stream().map(ResQuizDto::new).collect(Collectors.toList()));
     }
 
     @GetMapping("/re")
