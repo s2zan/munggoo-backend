@@ -46,15 +46,19 @@ public class QuizServiceTest {
 
     @Before
     public void setUp() {
+        quizRepository.deleteAll();
+        highlightRepository.deleteAll();
     }
+
 
     @Test
     public void getHighlights(){
         reqHighlightDtos = new ArrayList<>();
         reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "hello", 0));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         highlights = highlightRepository.saveAll(highlights);
+
         assertThat(highlights.size()).isEqualTo(reqHighlightDtos.size());
         assertThat(highlights.get(0).getStartIndex()).isEqualTo(reqHighlightDtos.get(0).getStartIndex());
         assertThat(highlights.get(0).getContent()).isEqualTo(reqHighlightDtos.get(0).getContent());
@@ -66,47 +70,37 @@ public class QuizServiceTest {
     }
 
     @Test
-    public void save_delete(){
-        quizService.delete(fileId);
-        quizDtos = new ArrayList<>();
-        quizDtos.add(new QuizDto(fileId, 1L, 10L, "hello"));
-        quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
-        quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
-        quizService.save(quizzes);
-        List<Quiz> temp = quizRepository.findByFileIdOrderByStartIndex(fileId);
-        assertThat(temp.size()).isEqualTo(2);
-        quizService.delete(fileId);
-        assertThat(quizRepository.findByFileIdOrderByStartIndex(fileId).size()).isEqualTo(0);
-    }
+    public void createAndGetQuiz(){
+        reqHighlightDtos = new ArrayList<>();
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "종합 병원", 1));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "호두과자", 0));
+        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
+        highlights = highlightRepository.saveAll(highlights);
+        List<Quiz> quizzes = quizService.createQuiz(fileId);
 
-    @Test
-    public void getQuiz(){
-        quizDtos = new ArrayList<>();
-        quizDtos.add(new QuizDto(fileId, 1L, 10L, "hello"));
-        quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
-        quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
-        quizService.save(quizzes);
+        assertThat(quizzes.size()).isEqualTo(2);
         assertThat(quizService.getQuiz(fileId).size()).isEqualTo(quizzes.size());
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void getEmptyQuiz() {
-        quizService.getQuiz(fileId);
     }
 
     @Test
     public void marking(){
 
-        quizDtos = new ArrayList<>();
-        quizDtos.add(new QuizDto(fileId, 1L, 10L, "hello"));
-        quizDtos.add(new QuizDto(fileId, 11L, 13L, "안녕"));
-        quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
-        quizService.save(quizzes);
+        reqHighlightDtos = new ArrayList<>();
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "hello", 1));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕", 0));
+        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
+        highlights = highlightRepository.saveAll(highlights);
+        List<Quiz> quizzes = quizService.createQuiz(fileId);
 
         List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
         reqAnswerDtos.add(new ReqAnswerDto("Hello"));
         reqAnswerDtos.add(new ReqAnswerDto("안녕"));
 
         quizService.marking(fileId, reqAnswerDtos);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getEmptyQuiz() {
+        quizService.getQuiz(fileId);
     }
 }

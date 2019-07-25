@@ -38,6 +38,8 @@ public class QuizControllerTest {
 
     @MockBean
     private QuizService quizService;
+
+    @MockBean
     private HighlightForQuizService highlightForQuizService;
 
     private List<Highlight> highlights;
@@ -60,16 +62,16 @@ public class QuizControllerTest {
 
     @Test
     public void createQuiz() throws Exception {
-        when(highlightForQuizService.getHighlights(any())).thenReturn(highlights);
-        when(quizService.getQuiz(any())).thenReturn(quizzes);
+//        when(highlightForQuizService.getHighlights(any())).thenReturn(highlights);
+        when(quizService.createQuiz(any())).thenReturn(quizzes);
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].startIndex").value(highlights.get(0).getStartIndex()))
-                .andExpect(jsonPath("$.[0].endIndex").value(highlights.get(0).getEndIndex()))
-                .andExpect(jsonPath("$.[1].startIndex").value(highlights.get(1).getStartIndex()))
-                .andExpect(jsonPath("$.[1].endIndex").value(highlights.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.[0].startIndex").value(quizzes.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.[0].endIndex").value(quizzes.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.[1].startIndex").value(quizzes.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.[1].endIndex").value(quizzes.get(1).getEndIndex()))
                 .andDo(print());
 
     }
@@ -81,10 +83,10 @@ public class QuizControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].startIndex").value(highlights.get(0).getStartIndex()))
-                .andExpect(jsonPath("$.[0].endIndex").value(highlights.get(0).getEndIndex()))
-                .andExpect(jsonPath("$.[1].startIndex").value(highlights.get(1).getStartIndex()))
-                .andExpect(jsonPath("$.[1].endIndex").value(highlights.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.[0].startIndex").value(quizzes.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.[0].endIndex").value(quizzes.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.[1].startIndex").value(quizzes.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.[1].endIndex").value(quizzes.get(1).getEndIndex()))
                 .andDo(print());
     }
 
