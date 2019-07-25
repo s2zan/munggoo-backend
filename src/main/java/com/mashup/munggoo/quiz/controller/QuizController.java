@@ -3,6 +3,7 @@ package com.mashup.munggoo.quiz.controller;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
+import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import com.mashup.munggoo.quiz.dto.ReqResultDto;
 import com.mashup.munggoo.quiz.dto.ResQuizDto;
@@ -20,11 +21,12 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/v1/devices/{device-id}/files/{file-id}/quiz")
 public class QuizController {
     private final QuizService quizService;
+    private final HighlightForQuizService highlightForQuizService;
 
     @GetMapping
     public ResponseEntity<List<ResQuizDto>> createQuiz(@PathVariable(value="device-id") Long deviceId,
                                                        @PathVariable(value="file-id") Long fileId){
-        List<Highlight> highlightList = quizService.getHighlights(fileId);
+        List<Highlight> highlightList = highlightForQuizService.getHighlights(fileId);
 
         quizService.delete(fileId);
 

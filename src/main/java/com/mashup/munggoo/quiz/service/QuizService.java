@@ -2,8 +2,6 @@ package com.mashup.munggoo.quiz.service;
 
 import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
-import com.mashup.munggoo.highlight.Highlight;
-import com.mashup.munggoo.highlight.HighlightRepository;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.AnswerDto;
 import com.mashup.munggoo.quiz.dto.ReqResultDto;
@@ -11,28 +9,15 @@ import com.mashup.munggoo.quiz.dto.ScoreDto;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class QuizService {
     private final QuizRepository quizRepository;
-    private final HighlightRepository highlightRepository;
 
-
-    public List<Highlight> getHighlights(Long fileId) {
-        List<Highlight> highlights = highlightRepository.findByFileId(fileId);
-        if (highlights.isEmpty()) {
-            throw new NotFoundException("Highlight Does Not Exist.");
-        }
-        return highlights;
-    }
-
-    @Transactional
     public void delete(Long fileId){
         if(quizAlreadyExist(fileId)){
             quizRepository.deleteQuizzesByFileId(fileId);
