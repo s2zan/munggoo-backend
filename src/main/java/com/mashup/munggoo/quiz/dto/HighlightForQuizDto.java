@@ -1,4 +1,4 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.dto;
 
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightType;

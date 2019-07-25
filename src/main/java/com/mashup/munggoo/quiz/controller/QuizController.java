@@ -1,5 +1,12 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.controller;
 
+import com.mashup.munggoo.quiz.quizGenerator.Quiz;
+import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
+import com.mashup.munggoo.quiz.service.QuizService;
+import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
+import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.ResQuizDto;
+import com.mashup.munggoo.quiz.dto.ScoreDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +23,7 @@ public class QuizController {
 
     @GetMapping
     public ResponseEntity<List<ResQuizDto>> createQuiz(@PathVariable(value="device-id") Long deviceId,
-                                           @PathVariable(value="file-id") Long fileId){
+                                                       @PathVariable(value="file-id") Long fileId){
         List<HighlightForQuizDto> highlightList = quizService.getHighlights(fileId);
 
         quizService.delete(fileId);

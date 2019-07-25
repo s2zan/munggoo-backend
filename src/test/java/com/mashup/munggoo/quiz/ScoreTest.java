@@ -1,5 +1,10 @@
 package com.mashup.munggoo.quiz;
 
+import com.mashup.munggoo.quiz.dto.AnswerDto;
+import com.mashup.munggoo.quiz.dto.QuizDto;
+import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.ScoreDto;
+import com.mashup.munggoo.quiz.quizGenerator.Quiz;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,5 +1,6 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.dto;
 
+import com.mashup.munggoo.quiz.quizGenerator.Quiz;
 import lombok.Getter;
 
 @Getter

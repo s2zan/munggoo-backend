@@ -1,9 +1,15 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.service;
 
 import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
+import com.mashup.munggoo.quiz.quizGenerator.Quiz;
+import com.mashup.munggoo.quiz.dto.AnswerDto;
+import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
+import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.ScoreDto;
+import com.mashup.munggoo.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.quizGenerator;
 
 import kr.co.shineware.nlp.komoran.model.Token;
 
