@@ -4,8 +4,8 @@ import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.AnswerDto;
-import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.Result;
+import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
@@ -54,23 +54,23 @@ public class QuizService {
         return quizzes;
     }
 
-    public ScoreDto marking(Long fileId, List<ReqResultDto> reqResultDtos){
+    public ScoreDto marking(Long fileId, List<ReqAnswerDto> reqAnswerDtos){
         List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
 
         if (quizzes.isEmpty()) {
             throw new NotFoundException("Quiz Does Not Exist.");
         }
-        if(quizzes.size() != reqResultDtos.size()){
+        if(quizzes.size() != reqAnswerDtos.size()){
             throw new ConflictException("User answer doesn't match with the quiz.");
         }
 
-        List<AnswerDto> answerDtos = new ArrayList<>();
+        List<Result> results = new ArrayList<>();
 
         for(int i = 0; i< quizzes.size(); i++){
-            answerDtos.add(new AnswerDto(reqResultDtos.get(i), quizzes.get(i)));
+            results.add(new Result(reqAnswerDtos.get(i), quizzes.get(i)));
         }
 
-        return new ScoreDto(answerDtos);
+        return new ScoreDto(results);
     }
 
 }

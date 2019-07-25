@@ -1,11 +1,8 @@
 package com.mashup.munggoo.quiz.controller;
 
-import com.mashup.munggoo.highlight.Highlight;
-import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
 import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
-import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ResQuizDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +35,8 @@ public class QuizController {
     @PostMapping
     public ResponseEntity<ScoreDto> quizResult(@PathVariable(value="device-id") Long deviceId,
                                                @PathVariable(value="file-id") Long fileId,
-                                               @RequestBody List<ReqResultDto> reqResultDtos){
-        return ResponseEntity.status(HttpStatus.OK).body(quizService.marking(fileId, reqResultDtos));
+                                               @RequestBody List<ReqAnswerDto> reqAnswerDtos){
+        return ResponseEntity.status(HttpStatus.OK).body(quizService.marking(fileId, reqAnswerDtos));
     }
 
 }

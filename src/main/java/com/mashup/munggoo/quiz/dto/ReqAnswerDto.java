@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReqResultDto {
+public class ReqAnswerDto {
     private String userAnswer;
 }

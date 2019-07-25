@@ -1,9 +1,9 @@
 package com.mashup.munggoo.quiz;
 
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.AnswerDto;
+import com.mashup.munggoo.quiz.dto.Result;
 import com.mashup.munggoo.quiz.dto.QuizDto;
-import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +14,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ScoreTest {
-    private ReqResultDto reqResultDto;
-    private AnswerDto answerDto;
-    private List<AnswerDto> answerDtoList;
+    private ReqAnswerDto reqAnswerDto;
+    private Result result;
+    private List<Result> resultList;
     private ScoreDto scoreDto;
     private Quiz quiz;
     private QuizDto quizDto;
@@ -26,23 +26,23 @@ public class ScoreTest {
         quizDto = new QuizDto(1L, 1L, 1L, "Test");
         quiz = Quiz.from(quizDto);
 
-        reqResultDto = new ReqResultDto("test");
-        answerDtoList = new ArrayList<>();
-        answerDto = new AnswerDto(reqResultDto, quiz);
-        answerDtoList.add(answerDto);
-        scoreDto = new ScoreDto(answerDtoList);
+        reqAnswerDto = new ReqAnswerDto("test");
+        resultList = new ArrayList<>();
+        result = new Result(reqAnswerDto, quiz);
+        resultList.add(result);
+        scoreDto = new ScoreDto(resultList);
     }
 
     @Test
     public void constructReqResultDto() {
-        assertThat(reqResultDto.getUserAnswer()).isEqualTo("test");
+        assertThat(reqAnswerDto.getUserAnswer()).isEqualTo("test");
     }
 
     @Test
     public void constructAnswerDto() {
-        assertThat(answerDto.getMark()).isEqualTo(1);
-        assertThat(answerDto.getRealAnswer()).isEqualTo("Test");
-        assertThat(answerDto.getUserAnswer()).isEqualTo("test");
+        assertThat(result.getMark()).isEqualTo(1);
+        assertThat(result.getRealAnswer()).isEqualTo("Test");
+        assertThat(result.getUserAnswer()).isEqualTo("test");
     }
 
     @Test

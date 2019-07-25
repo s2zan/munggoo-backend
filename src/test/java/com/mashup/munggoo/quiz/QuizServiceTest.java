@@ -6,7 +6,7 @@ import com.mashup.munggoo.highlight.HighlightRepository;
 import com.mashup.munggoo.highlight.ReqHighlightDto;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.QuizDto;
-import com.mashup.munggoo.quiz.dto.ReqResultDto;
+import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
 import com.mashup.munggoo.quiz.service.QuizService;
 import org.junit.Before;
@@ -103,10 +103,10 @@ public class QuizServiceTest {
         quizzes = quizDtos.stream().map(quizDto -> Quiz.from(quizDto)).collect(Collectors.toList());
         quizService.save(quizzes);
 
-        List<ReqResultDto> reqResultDtos= new ArrayList<>();
-        reqResultDtos.add(new ReqResultDto("Hello"));
-        reqResultDtos.add(new ReqResultDto("안녕"));
+        List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
+        reqAnswerDtos.add(new ReqAnswerDto("Hello"));
+        reqAnswerDtos.add(new ReqAnswerDto("안녕"));
 
-        quizService.marking(fileId, reqResultDtos);
+        quizService.marking(fileId, reqAnswerDtos);
     }
 }

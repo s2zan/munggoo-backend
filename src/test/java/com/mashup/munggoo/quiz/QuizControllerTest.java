@@ -6,6 +6,7 @@ import com.mashup.munggoo.highlight.ReqHighlightDto;
 import com.mashup.munggoo.quiz.controller.QuizController;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.*;
+import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class QuizControllerTest {
 
     @MockBean
     private QuizService quizService;
+    private HighlightForQuizService highlightForQuizService;
 
     private List<Highlight> highlights;
     private List<Quiz> quizzes;
@@ -58,8 +60,8 @@ public class QuizControllerTest {
 
     @Test
     public void createQuiz() throws Exception {
-        when(quizService.getHighlights(any())).thenReturn(highlights);
-        when(quizService.save(any())).thenReturn(quizzes);
+        when(highlightForQuizService.getHighlights(any())).thenReturn(highlights);
+        when(quizService.getQuiz(any())).thenReturn(quizzes);
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
@@ -91,25 +93,25 @@ public class QuizControllerTest {
         QuizDto quizDto = new QuizDto(1L, 1L, 1L, "Test");
         Quiz quiz = Quiz.from(quizDto);
 
-        ReqResultDto reqResultDto = new ReqResultDto("test");
-        List<ReqResultDto> reqResultDtos = new ArrayList<>();
-        reqResultDtos.add(reqResultDto);
+        ReqAnswerDto reqAnswerDto = new ReqAnswerDto("test");
+        List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
+        reqAnswerDtos.add(reqAnswerDto);
 
-        List<AnswerDto> answerDtoList = new ArrayList<>();
-        AnswerDto answerDto = new AnswerDto(reqResultDto, quiz);
-        answerDtoList.add(answerDto);
-        ScoreDto scoreDto = new ScoreDto(answerDtoList);
+        List<Result> resultList = new ArrayList<>();
+        Result result = new Result(reqAnswerDto, quiz);
+        resultList.add(result);
+        ScoreDto scoreDto = new ScoreDto(resultList);
 
         when(quizService.marking(any(), any())).thenReturn(scoreDto);
 
         mockMvc.perform(post("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(objectMapper.writeValueAsString(reqResultDtos)))
+                .content(objectMapper.writeValueAsString(reqAnswerDtos)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.score").value(1))
                 .andExpect(jsonPath("$.perfectScore").value(1))
-                .andExpect(jsonPath("$.result.[0].userAnswer").value(reqResultDtos.get(0).getUserAnswer()))
+                .andExpect(jsonPath("$.result.[0].userAnswer").value(reqAnswerDtos.get(0).getUserAnswer()))
                 .andExpect(jsonPath("$.result.[0].realAnswer").value(quizDto.getContent()))
                 .andExpect(jsonPath("$.result.[0].mark").value(1))
                 .andDo(print());
