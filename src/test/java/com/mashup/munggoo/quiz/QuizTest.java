@@ -1,8 +1,8 @@
 package com.mashup.munggoo.quiz;
 
+import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.QuizDto;
 import com.mashup.munggoo.quiz.dto.ResQuizDto;
-import com.mashup.munggoo.quiz.quizGenerator.Quiz;
 import org.junit.Before;
 import org.junit.Test;
 

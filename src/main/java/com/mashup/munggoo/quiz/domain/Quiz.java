@@ -1,4 +1,4 @@
-package com.mashup.munggoo.quiz.quizGenerator;
+package com.mashup.munggoo.quiz.domain;
 
 import com.mashup.munggoo.quiz.dto.QuizDto;
 import lombok.Getter;

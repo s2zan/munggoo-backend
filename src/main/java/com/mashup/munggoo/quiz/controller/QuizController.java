@@ -1,6 +1,6 @@
 package com.mashup.munggoo.quiz.controller;
 
-import com.mashup.munggoo.quiz.quizGenerator.Quiz;
+import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
 import com.mashup.munggoo.quiz.service.QuizService;
 import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;

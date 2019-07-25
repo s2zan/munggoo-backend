@@ -4,7 +4,7 @@ import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
-import com.mashup.munggoo.quiz.quizGenerator.Quiz;
+import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.AnswerDto;
 import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
 import com.mashup.munggoo.quiz.dto.ReqResultDto;

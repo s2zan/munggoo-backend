@@ -1,6 +1,7 @@
 package com.mashup.munggoo.quiz.quizGenerator;
 
 import com.mashup.munggoo.highlight.HighlightType;
+import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
 import com.mashup.munggoo.quiz.dto.QuizDto;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
