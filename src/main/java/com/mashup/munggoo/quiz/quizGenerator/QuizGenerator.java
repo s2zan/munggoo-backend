@@ -1,8 +1,8 @@
 package com.mashup.munggoo.quiz.quizGenerator;
 
+import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightType;
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
 import com.mashup.munggoo.quiz.dto.QuizDto;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
@@ -17,14 +17,14 @@ import java.util.Stack;
 public class QuizGenerator {
     private static final Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 
-    public static List<Quiz> generateQuizSet(List<HighlightForQuizDto> highlights){
+    public static List<Quiz> generateQuizSet(List<Highlight> highlights){
         List<Quiz> selectedQuiz = new ArrayList<>();
         List<QuizDto> candidateQuiz = new ArrayList<>();
         List<QuizDto> preliminaryQuiz = new ArrayList<>();
 
         Random r = new Random();
 
-        for (HighlightForQuizDto highlight : highlights){
+        for (Highlight highlight : highlights){
             if(highlight.getContent().trim().length() == 0) continue;
 
             if(highlight.getType() == HighlightType.WORD){
@@ -205,7 +205,7 @@ public class QuizGenerator {
         return first;
     }
 
-    private static QuizDto tokenToQuizDto(Token token, HighlightForQuizDto highlight){
+    private static QuizDto tokenToQuizDto(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
         return new QuizDto(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),
@@ -213,7 +213,7 @@ public class QuizGenerator {
                 content);
     }
 
-    private static Quiz tokenToQuiz(Token token, HighlightForQuizDto highlight){
+    private static Quiz tokenToQuiz(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
         return Quiz.from(new QuizDto(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),

@@ -38,7 +38,7 @@ public class QuizControllerTest {
     @MockBean
     private QuizService quizService;
 
-    private List<HighlightForQuizDto> highlightForQuizDtos;
+    private List<Highlight> highlights;
     private List<Quiz> quizzes;
     private Long fileId = 1L;
 
@@ -46,9 +46,9 @@ public class QuizControllerTest {
 
     @Before
     public void setUp(){
-        highlightForQuizDtos = new ArrayList<>();
-        highlightForQuizDtos.add(new HighlightForQuizDto(new Highlight(fileId, new ReqHighlightDto(0L,4L,"종합 병원", 0))));
-        highlightForQuizDtos.add(new HighlightForQuizDto(new Highlight(fileId, new ReqHighlightDto(5L,9L,"호두과자", 0))));
+        highlights = new ArrayList<>();
+        highlights.add(new Highlight(fileId, new ReqHighlightDto(0L,4L,"종합 병원", 0)));
+        highlights.add(new Highlight(fileId, new ReqHighlightDto(5L,9L,"호두과자", 0)));
         quizzes = new ArrayList<>();
         quizzes.add(new Quiz(new QuizDto(1L, 0L, 4L, "종합 병원")));
         quizzes.add(new Quiz(new QuizDto(1L, 5L, 9L, "호두과자")));
@@ -58,16 +58,16 @@ public class QuizControllerTest {
 
     @Test
     public void createQuiz() throws Exception {
-        when(quizService.getHighlights(any())).thenReturn(highlightForQuizDtos);
+        when(quizService.getHighlights(any())).thenReturn(highlights);
         when(quizService.save(any())).thenReturn(quizzes);
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].startIndex").value(highlightForQuizDtos.get(0).getStartIndex()))
-                .andExpect(jsonPath("$.[0].endIndex").value(highlightForQuizDtos.get(0).getEndIndex()))
-                .andExpect(jsonPath("$.[1].startIndex").value(highlightForQuizDtos.get(1).getStartIndex()))
-                .andExpect(jsonPath("$.[1].endIndex").value(highlightForQuizDtos.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.[0].startIndex").value(highlights.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.[0].endIndex").value(highlights.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.[1].startIndex").value(highlights.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.[1].endIndex").value(highlights.get(1).getEndIndex()))
                 .andDo(print());
 
     }
@@ -79,10 +79,10 @@ public class QuizControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].startIndex").value(highlightForQuizDtos.get(0).getStartIndex()))
-                .andExpect(jsonPath("$.[0].endIndex").value(highlightForQuizDtos.get(0).getEndIndex()))
-                .andExpect(jsonPath("$.[1].startIndex").value(highlightForQuizDtos.get(1).getStartIndex()))
-                .andExpect(jsonPath("$.[1].endIndex").value(highlightForQuizDtos.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.[0].startIndex").value(highlights.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.[0].endIndex").value(highlights.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.[1].startIndex").value(highlights.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.[1].endIndex").value(highlights.get(1).getEndIndex()))
                 .andDo(print());
     }
 

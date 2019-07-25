@@ -6,7 +6,6 @@ import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.AnswerDto;
-import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
 import com.mashup.munggoo.quiz.dto.ReqResultDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
@@ -25,12 +24,12 @@ public class QuizService {
     private final HighlightRepository highlightRepository;
 
 
-    public List<HighlightForQuizDto> getHighlights(Long fileId) {
+    public List<Highlight> getHighlights(Long fileId) {
         List<Highlight> highlights = highlightRepository.findByFileId(fileId);
         if (highlights.isEmpty()) {
             throw new NotFoundException("Highlight Does Not Exist.");
         }
-        return highlights.stream().map(HighlightForQuizDto::new).collect(Collectors.toList());
+        return highlights;
     }
 
     @Transactional

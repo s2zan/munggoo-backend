@@ -5,7 +5,6 @@ import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
 import com.mashup.munggoo.highlight.ReqHighlightDto;
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.HighlightForQuizDto;
 import com.mashup.munggoo.quiz.dto.QuizDto;
 import com.mashup.munggoo.quiz.dto.ReqResultDto;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
@@ -39,7 +38,6 @@ public class QuizServiceTest {
 
     private List<ReqHighlightDto> reqHighlightDtos;
     private List<Highlight> highlights;
-    private List<HighlightForQuizDto> highlightForQuizDtos;
 
     private List<Quiz> quizzes;
     private List<QuizDto> quizDtos;
@@ -56,15 +54,14 @@ public class QuizServiceTest {
         reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        highlightRepository.saveAll(highlights);
-        highlightForQuizDtos = quizService.getHighlights(fileId);
-        assertThat(highlightForQuizDtos.size()).isEqualTo(reqHighlightDtos.size());
-        assertThat(highlightForQuizDtos.get(0).getStartIndex()).isEqualTo(reqHighlightDtos.get(0).getStartIndex());
-        assertThat(highlightForQuizDtos.get(0).getContent()).isEqualTo(reqHighlightDtos.get(0).getContent());
-        assertThat(highlightForQuizDtos.get(0).getIsImportant()).isEqualTo(Boolean.TRUE);
-        assertThat(highlightForQuizDtos.get(1).getStartIndex()).isEqualTo(reqHighlightDtos.get(1).getStartIndex());
-        assertThat(highlightForQuizDtos.get(1).getContent()).isEqualTo(reqHighlightDtos.get(1).getContent());
-        assertThat(highlightForQuizDtos.get(1).getIsImportant()).isEqualTo(Boolean.FALSE);
+        highlights = highlightRepository.saveAll(highlights);
+        assertThat(highlights.size()).isEqualTo(reqHighlightDtos.size());
+        assertThat(highlights.get(0).getStartIndex()).isEqualTo(reqHighlightDtos.get(0).getStartIndex());
+        assertThat(highlights.get(0).getContent()).isEqualTo(reqHighlightDtos.get(0).getContent());
+        assertThat(highlights.get(0).getIsImportant()).isEqualTo(Boolean.TRUE);
+        assertThat(highlights.get(1).getStartIndex()).isEqualTo(reqHighlightDtos.get(1).getStartIndex());
+        assertThat(highlights.get(1).getContent()).isEqualTo(reqHighlightDtos.get(1).getContent());
+        assertThat(highlights.get(1).getIsImportant()).isEqualTo(Boolean.FALSE);
 
     }
 
