@@ -1,14 +1,10 @@
 package com.mashup.munggoo.quiz;
 
-import com.mashup.munggoo.highlight.Highlight;
-import com.mashup.munggoo.highlight.HighlightService;
-import com.mashup.munggoo.highlight.ResHighlightDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
