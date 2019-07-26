@@ -1,5 +1,6 @@
 package com.mashup.munggoo.quiz.controller;
 
+import com.mashup.munggoo.quiz.dto.ResQuizzesDto;
 import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
@@ -20,15 +21,15 @@ public class QuizController {
     private final HighlightForQuizService highlightForQuizService;
 
     @GetMapping
-    public ResponseEntity<List<ResQuiz>> createQuiz(@PathVariable(value="device-id") Long deviceId,
+    public ResponseEntity<ResQuizzesDto> createQuiz(@PathVariable(value="device-id") Long deviceId,
                                                     @PathVariable(value="file-id") Long fileId){
-        return ResponseEntity.status(HttpStatus.OK).body(quizService.createQuiz(fileId));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResQuizzesDto(quizService.createQuiz(fileId)));
     }
 
     @GetMapping("/re")
-    public ResponseEntity<List<ResQuiz>> retakeQuiz(@PathVariable(value="device-id") Long deviceId,
+    public ResponseEntity<ResQuizzesDto> retakeQuiz(@PathVariable(value="device-id") Long deviceId,
                                                     @PathVariable(value="file-id") Long fileId){
-        return ResponseEntity.status(HttpStatus.OK).body(quizService.getQuiz(fileId));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResQuizzesDto(quizService.getQuiz(fileId)));
     }
 
     @PostMapping
