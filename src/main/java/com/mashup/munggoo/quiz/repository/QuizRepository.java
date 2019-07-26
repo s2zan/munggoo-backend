@@ -1,5 +1,6 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.repository;
 
+import com.mashup.munggoo.quiz.domain.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,5 +1,8 @@
 package com.mashup.munggoo.quiz;
 
+import com.mashup.munggoo.quiz.domain.Quiz;
+import com.mashup.munggoo.quiz.dto.QuizDto;
+import com.mashup.munggoo.quiz.repository.QuizRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

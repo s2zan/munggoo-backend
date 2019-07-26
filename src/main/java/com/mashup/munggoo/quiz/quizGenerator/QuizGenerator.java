@@ -1,6 +1,9 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.quizGenerator;
 
+import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightType;
+import com.mashup.munggoo.quiz.domain.Quiz;
+import com.mashup.munggoo.quiz.dto.QuizDto;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
@@ -14,14 +17,14 @@ import java.util.Stack;
 public class QuizGenerator {
     private static final Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 
-    public static List<Quiz> generateQuizSet(List<HighlightForQuizDto> highlights){
+    public static List<Quiz> generateQuizSet(List<Highlight> highlights){
         List<Quiz> selectedQuiz = new ArrayList<>();
         List<QuizDto> candidateQuiz = new ArrayList<>();
         List<QuizDto> preliminaryQuiz = new ArrayList<>();
 
         Random r = new Random();
 
-        for (HighlightForQuizDto highlight : highlights){
+        for (Highlight highlight : highlights){
             if(highlight.getContent().trim().length() == 0) continue;
 
             if(highlight.getType() == HighlightType.WORD){
@@ -38,9 +41,10 @@ public class QuizGenerator {
 
             KomoranResult analyzeResultList = komoran.analyze(highlight.getContent());
             List<Token> tokenList = analyzeResultList.getTokenList();
-            GeneratedQuizDto generatedQuizDto = selectWords(tokenList);
+            GeneratedQuiz generatedQuiz = selectWords(tokenList);
             List<QuizDto> quizList = new ArrayList<>();
-            for(Token word : generatedQuizDto.selected){
+
+            for(Token word : generatedQuiz.selected){
                 quizList.add(tokenToQuizDto(word, highlight));
             }
             if(highlight.getIsImportant()) {
@@ -49,16 +53,16 @@ public class QuizGenerator {
                     selectedQuiz.add(Quiz.from(quizList.get(selectOne)));
                     quizList.remove(selectOne);
                 }
-                else if(generatedQuizDto.preliminary.size() > 0) {
-                    int selectOne = r.nextInt(generatedQuizDto.preliminary.size());
-                    selectedQuiz.add(tokenToQuiz(generatedQuizDto.preliminary.get(selectOne), highlight));
-                    generatedQuizDto.preliminary.remove(selectOne);
+                else if(generatedQuiz.preliminary.size() > 0) {
+                    int selectOne = r.nextInt(generatedQuiz.preliminary.size());
+                    selectedQuiz.add(tokenToQuiz(generatedQuiz.preliminary.get(selectOne), highlight));
+                    generatedQuiz.preliminary.remove(selectOne);
                 }
 
             }
             candidateQuiz.addAll(quizList);
             if(selectedQuiz.size()+candidateQuiz.size() < QuizConfig.quizNum) {
-                for(Token word : generatedQuizDto.preliminary){
+                for(Token word : generatedQuiz.preliminary){
                     preliminaryQuiz.add(tokenToQuizDto(word, highlight));
                 }
             }
@@ -73,7 +77,6 @@ public class QuizGenerator {
                 candidateQuiz.remove(newIdx);
             }
             if(selectedQuiz.size() < QuizConfig.quizNum){
-                System.out.println("add preliminary quiz");
                 cnt = (QuizConfig.quizNum - selectedQuiz.size() > preliminaryQuiz.size() ?
                         preliminaryQuiz.size() : QuizConfig.quizNum - selectedQuiz.size());
                 for(int i=0 ; i<cnt; i++){
@@ -93,8 +96,8 @@ public class QuizGenerator {
         return selectedQuiz;
     }
 
-    private static GeneratedQuizDto selectWords(List<Token> tokenList){
-        GeneratedQuizDto result = new GeneratedQuizDto();
+    private static GeneratedQuiz selectWords(List<Token> tokenList){
+        GeneratedQuiz result = new GeneratedQuiz();
         Stack<Token> tokenStack = new Stack<>();
 
         for(Token token : tokenList){
@@ -179,7 +182,6 @@ public class QuizGenerator {
                 case "NN":
                 case "NNP":
                 case "NNSS":
-//                    System.out.printf("`%s(%s)`", token.getMorph(), token.getPos());
                     result.selected.add(token);
                     break;
                 case "SL":
@@ -202,7 +204,7 @@ public class QuizGenerator {
         return first;
     }
 
-    private static QuizDto tokenToQuizDto(Token token, HighlightForQuizDto highlight){
+    private static QuizDto tokenToQuizDto(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
         return new QuizDto(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),
@@ -210,7 +212,7 @@ public class QuizGenerator {
                 content);
     }
 
-    private static Quiz tokenToQuiz(Token token, HighlightForQuizDto highlight){
+    private static Quiz tokenToQuiz(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
         return Quiz.from(new QuizDto(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),

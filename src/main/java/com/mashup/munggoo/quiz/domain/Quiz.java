@@ -1,5 +1,6 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.domain;
 
+import com.mashup.munggoo.quiz.dto.QuizDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

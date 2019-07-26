@@ -1,9 +1,15 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.service;
 
 import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
-import com.mashup.munggoo.highlight.HighlightRepository;
+import com.mashup.munggoo.quiz.domain.Quiz;
+import com.mashup.munggoo.quiz.dto.ResQuizDto;
+import com.mashup.munggoo.quiz.dto.Result;
+import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
+import com.mashup.munggoo.quiz.dto.ScoreDto;
+import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
+import com.mashup.munggoo.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,56 +22,57 @@ import java.util.stream.Collectors;
 @Service
 public class QuizService {
     private final QuizRepository quizRepository;
-    private final HighlightRepository highlightRepository;
-
-
-    public List<HighlightForQuizDto> getHighlights(Long fileId) {
-        List<Highlight> highlights = highlightRepository.findByFileId(fileId);
-        if (highlights.isEmpty()) {
-            throw new NotFoundException("Highlight Does Not Exist.");
-        }
-        return highlights.stream().map(HighlightForQuizDto::new).collect(Collectors.toList());
-    }
+    private final HighlightForQuizService highlightForQuizService;
 
     @Transactional
-    public void delete(Long fileId){
+    public List<ResQuizDto> createQuiz(Long fileId){
+        List<Highlight> highlights = highlightForQuizService.getHighlights(fileId);
+        if(highlights.isEmpty()){
+            throw new NotFoundException("Highlight Does Not Exist.");
+        }
+
         if(quizAlreadyExist(fileId)){
             quizRepository.deleteQuizzesByFileId(fileId);
         }
+
+        List<Quiz> quizzes= QuizGenerator.generateQuizSet(highlights);
+
+        if(quizzes.isEmpty()){
+            throw new NotFoundException("Quiz Does Not Generated.");
+        }
+
+        return quizRepository.saveAll(quizzes).stream().map(ResQuizDto::new).collect(Collectors.toList());
     }
+
     private boolean quizAlreadyExist(Long fileId){
         return quizRepository.existsQuizzesByFileId(fileId);
     }
 
-    public List<Quiz> save(List<Quiz> quizList){
-        return quizRepository.saveAll(quizList);
-    }
-
-    public List<Quiz> getQuiz(Long fileId){
+    public List<ResQuizDto> getQuiz(Long fileId){
         List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
         if (quizzes.isEmpty()) {
             throw new NotFoundException("Quiz Does Not Exist.");
         }
-        return quizzes;
+        return quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList());
     }
 
-    public ScoreDto marking(Long fileId, List<ReqResultDto> reqResultDtos){
+    public ScoreDto marking(Long fileId, List<ReqAnswerDto> reqAnswerDtos){
         List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
 
         if (quizzes.isEmpty()) {
             throw new NotFoundException("Quiz Does Not Exist.");
         }
-        if(quizzes.size() != reqResultDtos.size()){
+        if(quizzes.size() != reqAnswerDtos.size()){
             throw new ConflictException("User answer doesn't match with the quiz.");
         }
 
-        List<AnswerDto> answerDtos = new ArrayList<>();
+        List<Result> results = new ArrayList<>();
 
         for(int i = 0; i< quizzes.size(); i++){
-            answerDtos.add(new AnswerDto(reqResultDtos.get(i), quizzes.get(i)));
+            results.add(new Result(reqAnswerDtos.get(i), quizzes.get(i)));
         }
 
-        return new ScoreDto(answerDtos);
+        return new ScoreDto(results);
     }
 
 }

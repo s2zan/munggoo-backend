@@ -1,15 +1,16 @@
-package com.mashup.munggoo.quiz;
+package com.mashup.munggoo.quiz.dto;
 
+import com.mashup.munggoo.quiz.domain.Quiz;
 import lombok.Getter;
 
 @Getter
-public class AnswerDto {
+public class Result {
     private String userAnswer;
     private String realAnswer;
     private Integer mark;
 
-    public AnswerDto(ReqResultDto reqResultDto, Quiz quiz){
-        userAnswer = reqResultDto.getUserAnswer();
+    public Result(ReqAnswerDto reqAnswerDto, Quiz quiz){
+        userAnswer = reqAnswerDto.getUserAnswer();
         realAnswer = quiz.getContent();
         String tempUser = userAnswer.replace(" ", "").toLowerCase();
         String tempReal = realAnswer.replace(" ", "").toLowerCase();
@@ -21,7 +22,7 @@ public class AnswerDto {
         }
     }
 
-    public AnswerDto from(ReqResultDto reqResultDto, Quiz quiz){
-        return new AnswerDto(reqResultDto, quiz);
+    public Result from(ReqAnswerDto reqAnswerDto, Quiz quiz){
+        return new Result(reqAnswerDto, quiz);
     }
 }
