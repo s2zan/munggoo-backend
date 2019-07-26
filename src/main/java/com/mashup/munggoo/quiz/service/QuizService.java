@@ -8,7 +8,7 @@ import com.mashup.munggoo.quiz.dto.ResQuizDto;
 import com.mashup.munggoo.quiz.dto.Result;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
-import com.mashup.munggoo.quiz.quizGenerator.QuizGenerator;
+import com.mashup.munggoo.quiz.quizgenerator.QuizGenerator;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

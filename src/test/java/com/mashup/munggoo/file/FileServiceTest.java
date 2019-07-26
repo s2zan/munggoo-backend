@@ -57,10 +57,10 @@ public class FileServiceTest {
         files.add(File.from(2L, new ReqFileDto("Effective Java")));
         files.add(File.from(3L, new ReqFileDto("Test Driven Development")));
         given(fileRepository.findByDeviceId(any())).willReturn(files);
-        List<ResFileDto> resFileDtos = fileService.getFiles(deviceId);
-        for (int i = 0; i < resFileDtos.size(); i++) {
-            assertThat(resFileDtos.get(i).getId()).isEqualTo(files.get(i).getId());
-            assertThat(resFileDtos.get(i).getName()).isEqualTo(files.get(i).getName());
+        ResFilesDto resFilesDto = fileService.getFiles(deviceId);
+        for (int i = 0; i < resFilesDto.getFiles().size(); i++) {
+            assertThat(resFilesDto.getFiles().get(i).getId()).isEqualTo(files.get(i).getId());
+            assertThat(resFilesDto.getFiles().get(i).getName()).isEqualTo(files.get(i).getName());
         }
     }
 

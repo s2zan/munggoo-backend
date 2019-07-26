@@ -81,14 +81,15 @@ public class FileControllerTest {
     public void getFiles() throws Exception {
         List<File> files = new ArrayList<>();
         files.add(file);
-        List<ResFileDto> resFileDtos = files.stream().map(ResFileDto::new).collect(Collectors.toList());
-        when(fileService.getFiles(any())).thenReturn(resFileDtos);
+        ResFilesDto resFilesDto = new ResFilesDto(files.stream().map(ResFileDto::new).collect(Collectors.toList()));
+        when(fileService.getFiles(any())).thenReturn(resFilesDto);
         mockMvc.perform(get("/v1/devices/{device-id}/files", deviceId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].id").hasJsonPath())
-                .andExpect(jsonPath("$.[0].name").value(file.getName()))
+                .andExpect(jsonPath("$.files").hasJsonPath())
+                .andExpect(jsonPath("$.files.[0]id").hasJsonPath())
+                .andExpect(jsonPath("$.files.[0].name").value(file.getName()))
                 .andDo(print());
     }
 

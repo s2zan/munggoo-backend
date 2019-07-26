@@ -37,7 +37,7 @@ public class HighlightServiceTest {
 
     private List<Highlight> highlights;
 
-    private List<ResHighlightDto> resHighlightDtos;
+    private ResHighlightsDto resHighlightsDto;
 
     private ReqHighlightDto reqHighlightDto;
 
@@ -54,16 +54,16 @@ public class HighlightServiceTest {
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         given(highlightRepository.saveAll(anyCollection())).willReturn(highlights);
-        List<Highlight> savedHighlights = highlightService.save(fileId, reqHighlightDtos);
-        assertThat(savedHighlights.size()).isEqualTo(reqHighlightDtos.size());
-        assertThat(savedHighlights.get(0).getStartIndex()).isEqualTo(10L);
-        assertThat(savedHighlights.get(1).getStartIndex()).isEqualTo(30L);
+        HighlightsDto savedHighlights = highlightService.save(fileId, new ReqHighlightsDto(reqHighlightDtos));
+        assertThat(savedHighlights.getHighlights().size()).isEqualTo(reqHighlightDtos.size());
+        assertThat(savedHighlights.getHighlights().get(0).getStartIndex()).isEqualTo(10L);
+        assertThat(savedHighlights.getHighlights().get(1).getStartIndex()).isEqualTo(30L);
     }
 
     @Test(expected = BadRequestException.class)
     public void saveEmptyHighlight() {
         reqHighlightDtos = new ArrayList<>();
-        highlightService.save(fileId, reqHighlightDtos);
+        highlightService.save(fileId, new ReqHighlightsDto(reqHighlightDtos));
     }
 
     @Test
@@ -73,14 +73,14 @@ public class HighlightServiceTest {
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         given(highlightRepository.findByFileId(any())).willReturn(highlights);
-        resHighlightDtos = highlightService.getHighlights(fileId);
-        assertThat(resHighlightDtos.size()).isEqualTo(reqHighlightDtos.size());
-        assertThat(resHighlightDtos.get(0).getStartIndex()).isEqualTo(reqHighlightDtos.get(0).getStartIndex());
-        assertThat(resHighlightDtos.get(0).getContent()).isEqualTo(reqHighlightDtos.get(0).getContent());
-        assertThat(resHighlightDtos.get(0).getIsImportant()).isEqualTo(Boolean.TRUE);
-        assertThat(resHighlightDtos.get(1).getStartIndex()).isEqualTo(reqHighlightDtos.get(1).getStartIndex());
-        assertThat(resHighlightDtos.get(1).getContent()).isEqualTo(reqHighlightDtos.get(1).getContent());
-        assertThat(resHighlightDtos.get(1).getIsImportant()).isEqualTo(Boolean.FALSE);
+        resHighlightsDto = highlightService.getHighlights(fileId);
+        assertThat(resHighlightsDto.getHighlights().size()).isEqualTo(reqHighlightDtos.size());
+        assertThat(resHighlightsDto.getHighlights().get(0).getStartIndex()).isEqualTo(reqHighlightDtos.get(0).getStartIndex());
+        assertThat(resHighlightsDto.getHighlights().get(0).getContent()).isEqualTo(reqHighlightDtos.get(0).getContent());
+        assertThat(resHighlightsDto.getHighlights().get(0).getIsImportant()).isEqualTo(Boolean.TRUE);
+        assertThat(resHighlightsDto.getHighlights().get(1).getStartIndex()).isEqualTo(reqHighlightDtos.get(1).getStartIndex());
+        assertThat(resHighlightsDto.getHighlights().get(1).getContent()).isEqualTo(reqHighlightDtos.get(1).getContent());
+        assertThat(resHighlightsDto.getHighlights().get(1).getIsImportant()).isEqualTo(Boolean.FALSE);
     }
 
     @Test(expected = NotFoundException.class)

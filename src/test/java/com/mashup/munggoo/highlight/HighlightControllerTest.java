@@ -39,9 +39,11 @@ public class HighlightControllerTest {
 
     private List<ReqHighlightDto> reqHighlightDtos;
 
-    private List<Highlight> highlights;
+    private ReqHighlightsDto reqHighlightsDto;
 
-    private List<ResHighlightDto> resHighlightDtos;
+    private HighlightsDto highlightsDto;
+
+    private ResHighlightsDto resHighlightsDto;
 
     private ObjectMapper objectMapper;
 
@@ -57,37 +59,40 @@ public class HighlightControllerTest {
         reqHighlightDtos = new ArrayList<>();
         reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
-        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        when(highlightService.save(any(), any())).thenReturn(highlights);
+        reqHighlightsDto = new ReqHighlightsDto(reqHighlightDtos);
+        highlightsDto = new HighlightsDto(reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList()));
+        when(highlightService.save(any(), any())).thenReturn(highlightsDto);
         mockMvc.perform(post("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                    .content(objectMapper.writeValueAsString(reqHighlightDtos)))
+                    .content(objectMapper.writeValueAsString(reqHighlightsDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].id").hasJsonPath())
-                .andExpect(jsonPath("$.[0].fileId").value(fileId))
-                .andExpect(jsonPath("$.[0].startIndex").value(reqHighlightDtos.get(0).getStartIndex()))
-                .andExpect(jsonPath("$.[0].endIndex").value(reqHighlightDtos.get(0).getEndIndex()))
-                .andExpect(jsonPath("$.[0].content").value(reqHighlightDtos.get(0).getContent()))
-                .andExpect(jsonPath("$.[0].type").value(HighlightType.WORD.toString()))
-                .andExpect(jsonPath("$.[0].isImportant").value(Boolean.TRUE))
-                .andExpect(jsonPath("$.[1].id").hasJsonPath())
-                .andExpect(jsonPath("$.[1].fileId").value(fileId))
-                .andExpect(jsonPath("$.[1].startIndex").value(reqHighlightDtos.get(1).getStartIndex()))
-                .andExpect(jsonPath("$.[1].endIndex").value(reqHighlightDtos.get(1).getEndIndex()))
-                .andExpect(jsonPath("$.[1].content").value(reqHighlightDtos.get(1).getContent()))
-                .andExpect(jsonPath("$.[1].type").value(HighlightType.SENTENCE.toString()))
-                .andExpect(jsonPath("$.[1].isImportant").value(Boolean.FALSE))
+                .andExpect(jsonPath("$.highlights").hasJsonPath())
+                .andExpect(jsonPath("$.highlights.[0].id").hasJsonPath())
+                .andExpect(jsonPath("$.highlights.[0].fileId").value(fileId))
+                .andExpect(jsonPath("$.highlights.[0].startIndex").value(reqHighlightDtos.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.highlights.[0].endIndex").value(reqHighlightDtos.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.highlights.[0].content").value(reqHighlightDtos.get(0).getContent()))
+                .andExpect(jsonPath("$.highlights.[0].type").value(HighlightType.WORD.toString()))
+                .andExpect(jsonPath("$.highlights.[0].isImportant").value(Boolean.TRUE))
+                .andExpect(jsonPath("$.highlights.[1].id").hasJsonPath())
+                .andExpect(jsonPath("$.highlights.[1].fileId").value(fileId))
+                .andExpect(jsonPath("$.highlights.[1].startIndex").value(reqHighlightDtos.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.highlights.[1].endIndex").value(reqHighlightDtos.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.highlights.[1].content").value(reqHighlightDtos.get(1).getContent()))
+                .andExpect(jsonPath("$.highlights.[1].type").value(HighlightType.SENTENCE.toString()))
+                .andExpect(jsonPath("$.highlights.[1].isImportant").value(Boolean.FALSE))
                 .andDo(print());
     }
 
     @Test
     public void saveEmptyHighlight() throws Exception {
         reqHighlightDtos = new ArrayList<>();
+        reqHighlightsDto = new ReqHighlightsDto(reqHighlightDtos);
         when(highlightService.save(any(), any())).thenThrow(new BadRequestException("Request Body Is Empty."));
         mockMvc.perform(post("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                    .content(objectMapper.writeValueAsString(reqHighlightDtos)))
+                    .content(objectMapper.writeValueAsString(reqHighlightsDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.code").value("400"))
@@ -101,23 +106,24 @@ public class HighlightControllerTest {
         reqHighlightDtos = new ArrayList<>();
         reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
-        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        resHighlightDtos = highlights.stream().map(ResHighlightDto::new).collect(Collectors.toList());
-        when(highlightService.getHighlights(fileId)).thenReturn(resHighlightDtos);
+        highlightsDto = new HighlightsDto(reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList()));
+        resHighlightsDto = new ResHighlightsDto(highlightsDto.getHighlights().stream().map(ResHighlightDto::new).collect(Collectors.toList()));
+        when(highlightService.getHighlights(fileId)).thenReturn(resHighlightsDto);
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/highlights", 1L, fileId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[0].id").hasJsonPath())
-                .andExpect(jsonPath("$.[0].startIndex").value(reqHighlightDtos.get(0).getStartIndex()))
-                .andExpect(jsonPath("$.[0].endIndex").value(reqHighlightDtos.get(0).getEndIndex()))
-                .andExpect(jsonPath("$.[0].content").value(reqHighlightDtos.get(0).getContent()))
-                .andExpect(jsonPath("$.[0].isImportant").value(Boolean.TRUE))
-                .andExpect(jsonPath("$.[1].id").hasJsonPath())
-                .andExpect(jsonPath("$.[1].startIndex").value(reqHighlightDtos.get(1).getStartIndex()))
-                .andExpect(jsonPath("$.[1].endIndex").value(reqHighlightDtos.get(1).getEndIndex()))
-                .andExpect(jsonPath("$.[1].content").value(reqHighlightDtos.get(1).getContent()))
-                .andExpect(jsonPath("$.[1].isImportant").value(Boolean.FALSE))
+                .andExpect(jsonPath("$.highlights").hasJsonPath())
+                .andExpect(jsonPath("$.highlights.[0].id").hasJsonPath())
+                .andExpect(jsonPath("$.highlights.[0].startIndex").value(reqHighlightDtos.get(0).getStartIndex()))
+                .andExpect(jsonPath("$.highlights.[0].endIndex").value(reqHighlightDtos.get(0).getEndIndex()))
+                .andExpect(jsonPath("$.highlights.[0].content").value(reqHighlightDtos.get(0).getContent()))
+                .andExpect(jsonPath("$.highlights.[0].isImportant").value(Boolean.TRUE))
+                .andExpect(jsonPath("$.highlights.[1].id").hasJsonPath())
+                .andExpect(jsonPath("$.highlights.[1].startIndex").value(reqHighlightDtos.get(1).getStartIndex()))
+                .andExpect(jsonPath("$.highlights.[1].endIndex").value(reqHighlightDtos.get(1).getEndIndex()))
+                .andExpect(jsonPath("$.highlights.[1].content").value(reqHighlightDtos.get(1).getContent()))
+                .andExpect(jsonPath("$.highlights.[1].isImportant").value(Boolean.FALSE))
                 .andDo(print());
     }
 

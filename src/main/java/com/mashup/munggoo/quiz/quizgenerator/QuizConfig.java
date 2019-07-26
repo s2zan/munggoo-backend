@@ -1,4 +1,4 @@
-package com.mashup.munggoo.quiz.quizGenerator;
+package com.mashup.munggoo.quiz.quizgenerator;
 
 import java.util.Arrays;
 import java.util.List;

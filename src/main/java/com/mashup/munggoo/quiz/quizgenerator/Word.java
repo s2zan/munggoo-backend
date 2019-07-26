@@ -1,4 +1,4 @@
-package com.mashup.munggoo.quiz.dto;
+package com.mashup.munggoo.quiz.quizgenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuizDto {
+public class Word {
 
     private Long fileId;
 

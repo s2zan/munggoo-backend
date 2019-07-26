@@ -1,9 +1,8 @@
-package com.mashup.munggoo.quiz.quizGenerator;
+package com.mashup.munggoo.quiz.quizgenerator;
 
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightType;
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.QuizDto;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
@@ -19,8 +18,8 @@ public class QuizGenerator {
 
     public static List<Quiz> generateQuizSet(List<Highlight> highlights){
         List<Quiz> selectedQuiz = new ArrayList<>();
-        List<QuizDto> candidateQuiz = new ArrayList<>();
-        List<QuizDto> preliminaryQuiz = new ArrayList<>();
+        List<Word> candidateQuiz = new ArrayList<>();
+        List<Word> preliminaryQuiz = new ArrayList<>();
 
         Random r = new Random();
 
@@ -28,7 +27,7 @@ public class QuizGenerator {
             if(highlight.getContent().trim().length() == 0) continue;
 
             if(highlight.getType() == HighlightType.WORD){
-                QuizDto temp = new QuizDto(highlight.getFileId(),
+                Word temp = new Word(highlight.getFileId(),
                         highlight.getStartIndex(),
                         highlight.getEndIndex(),
                         highlight.getContent());
@@ -42,7 +41,7 @@ public class QuizGenerator {
             KomoranResult analyzeResultList = komoran.analyze(highlight.getContent());
             List<Token> tokenList = analyzeResultList.getTokenList();
             GeneratedQuiz generatedQuiz = selectWords(tokenList);
-            List<QuizDto> quizList = new ArrayList<>();
+            List<Word> quizList = new ArrayList<>();
 
             for(Token word : generatedQuiz.selected){
                 quizList.add(tokenToQuizDto(word, highlight));
@@ -204,9 +203,9 @@ public class QuizGenerator {
         return first;
     }
 
-    private static QuizDto tokenToQuizDto(Token token, Highlight highlight){
+    private static Word tokenToQuizDto(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
-        return new QuizDto(highlight.getFileId(),
+        return new Word(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),
                 highlight.getStartIndex() + token.getEndIndex(),
                 content);
@@ -214,7 +213,7 @@ public class QuizGenerator {
 
     private static Quiz tokenToQuiz(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
-        return Quiz.from(new QuizDto(highlight.getFileId(),
+        return Quiz.from(new Word(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),
                 highlight.getStartIndex() + token.getEndIndex(),
                 content));

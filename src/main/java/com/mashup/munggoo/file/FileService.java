@@ -20,12 +20,12 @@ public class FileService {
         return fileRepository.save(File.from(deviceId, reqFileDto));
     }
 
-    public List<ResFileDto> getFiles(Long deviceId) {
+    public ResFilesDto getFiles(Long deviceId) {
         List<File> files = fileRepository.findByDeviceId(deviceId);
         if (files.isEmpty()) {
             throw new NotFoundException("File Does Not Exist.");
         }
-        return files.stream().map(ResFileDto::new).collect(Collectors.toList());
+        return new ResFilesDto(files.stream().map(ResFileDto::new).collect(Collectors.toList()));
     }
 
     private Boolean isFileName(String name) {
