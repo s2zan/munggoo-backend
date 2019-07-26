@@ -97,6 +97,7 @@ public class QuizControllerTest {
         ReqAnswerDto reqAnswerDto = new ReqAnswerDto("test");
         List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
         reqAnswerDtos.add(reqAnswerDto);
+        ReqAnswersDto reqAnswersDto = new ReqAnswersDto(reqAnswerDtos);
 
         List<Result> resultList = new ArrayList<>();
         Result result = new Result(reqAnswerDto, quiz);
@@ -107,7 +108,7 @@ public class QuizControllerTest {
 
         mockMvc.perform(post("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(objectMapper.writeValueAsString(reqAnswerDtos)))
+                .content(objectMapper.writeValueAsString(reqAnswersDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.score").value(1))

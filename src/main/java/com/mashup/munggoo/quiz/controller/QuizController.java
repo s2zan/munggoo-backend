@@ -1,10 +1,10 @@
 package com.mashup.munggoo.quiz.controller;
 
+import com.mashup.munggoo.quiz.dto.ReqAnswersDto;
 import com.mashup.munggoo.quiz.dto.ResQuizzesDto;
 import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
-import com.mashup.munggoo.quiz.dto.ResQuiz;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,8 +35,8 @@ public class QuizController {
     @PostMapping
     public ResponseEntity<ScoreDto> quizResult(@PathVariable(value="device-id") Long deviceId,
                                                @PathVariable(value="file-id") Long fileId,
-                                               @RequestBody List<ReqAnswerDto> reqAnswerDtos){
-        return ResponseEntity.status(HttpStatus.OK).body(quizService.marking(fileId, reqAnswerDtos));
+                                               @RequestBody ReqAnswersDto reqAnswersDto){
+        return ResponseEntity.status(HttpStatus.OK).body(quizService.marking(fileId, reqAnswersDto.getAnswers()));
     }
 
 }
