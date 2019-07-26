@@ -5,8 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/v1/devices/{device-id}/files")
@@ -19,7 +17,7 @@ public class FileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResFileDto>> getFiles(@PathVariable(value = "device-id") Long deviceId) {
+    public ResponseEntity<ResFilesDto> getFiles(@PathVariable(value = "device-id") Long deviceId) {
         return ResponseEntity.status(HttpStatus.OK).body(fileService.getFiles(deviceId));
     }
 }

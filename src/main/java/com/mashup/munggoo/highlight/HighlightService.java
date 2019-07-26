@@ -14,21 +14,21 @@ import java.util.stream.Collectors;
 public class HighlightService {
     private final HighlightRepository highlightRepository;
 
-    public List<Highlight> save(Long fileId, List<ReqHighlightDto> reqHighlightDtos) {
-        if (reqHighlightDtos.isEmpty()) {
+    public HighlightsDto save(Long fileId, ReqHighlightsDto reqHighlightsDto) {
+        if (reqHighlightsDto.getHighlights().isEmpty()) {
             throw new BadRequestException("Request Body Is Empty.");
         }
-        return highlightRepository.saveAll(reqHighlightDtos.stream()
+        return new HighlightsDto(highlightRepository.saveAll(reqHighlightsDto.getHighlights().stream()
                 .map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList())));
     }
 
-    public List<ResHighlightDto> getHighlights(Long fileId) {
+    public ResHighlightsDto getHighlights(Long fileId) {
         List<Highlight> highlights = highlightRepository.findByFileId(fileId);
         if (highlights.isEmpty()) {
             throw new NotFoundException("Highlight Does Not Exist.");
         }
-        return highlights.stream().map(ResHighlightDto::new).collect(Collectors.toList());
+        return new ResHighlightsDto(highlights.stream().map(ResHighlightDto::new).collect(Collectors.toList()));
     }
 
     public Highlight deleteHighlight(Long id) {
