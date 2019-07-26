@@ -4,11 +4,11 @@ import com.mashup.munggoo.quiz.domain.Quiz;
 import lombok.Getter;
 
 @Getter
-public class ResQuiz {
+public class ResQuizDto {
     private Long startIndex;
     private Long endIndex;
 
-    public ResQuiz(Quiz quiz){
+    public ResQuizDto(Quiz quiz){
         startIndex = quiz.getStartIndex();
         endIndex = quiz.getEndIndex();
     }

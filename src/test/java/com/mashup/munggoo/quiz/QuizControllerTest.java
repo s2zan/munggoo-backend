@@ -63,7 +63,7 @@ public class QuizControllerTest {
     }
     @Test
     public void createQuiz() throws Exception {
-        when(quizService.createQuiz(any())).thenReturn(quizzes.stream().map(ResQuiz::new).collect(Collectors.toList()));
+        when(quizService.createQuiz(any())).thenReturn(quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList()));
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class QuizControllerTest {
 
     @Test
     public void retakeQuiz() throws Exception{
-        when(quizService.getQuiz(any())).thenReturn(quizzes.stream().map(ResQuiz::new).collect(Collectors.toList()));
+        when(quizService.getQuiz(any())).thenReturn(quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList()));
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz/re", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())

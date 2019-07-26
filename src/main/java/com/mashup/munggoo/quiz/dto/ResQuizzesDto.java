@@ -6,9 +6,9 @@ import java.util.List;
 
 @Getter
 public class ResQuizzesDto {
-    List<ResQuiz> quizzes;
+    List<ResQuizDto> quizzes;
 
-    public ResQuizzesDto(List<ResQuiz> quizzes){
+    public ResQuizzesDto(List<ResQuizDto> quizzes){
         this.quizzes = quizzes;
     }
 }
