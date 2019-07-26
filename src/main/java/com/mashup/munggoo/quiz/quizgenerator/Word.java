@@ -1,4 +1,4 @@
-package com.mashup.munggoo.quiz.quizGenerator;
+package com.mashup.munggoo.quiz.quizgenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

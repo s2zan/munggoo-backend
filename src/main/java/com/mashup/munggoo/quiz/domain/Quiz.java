@@ -1,6 +1,6 @@
 package com.mashup.munggoo.quiz.domain;
 
-import com.mashup.munggoo.quiz.quizGenerator.Word;
+import com.mashup.munggoo.quiz.quizgenerator.Word;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

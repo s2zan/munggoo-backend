@@ -6,7 +6,7 @@ import com.mashup.munggoo.highlight.ReqHighlightDto;
 import com.mashup.munggoo.quiz.controller.QuizController;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.*;
-import com.mashup.munggoo.quiz.quizGenerator.Word;
+import com.mashup.munggoo.quiz.quizgenerator.Word;
 import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import org.junit.Before;

@@ -2,7 +2,7 @@ package com.mashup.munggoo.quiz;
 
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.Result;
-import com.mashup.munggoo.quiz.quizGenerator.Word;
+import com.mashup.munggoo.quiz.quizgenerator.Word;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import org.junit.Before;
