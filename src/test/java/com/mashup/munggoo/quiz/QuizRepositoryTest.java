@@ -1,7 +1,7 @@
 package com.mashup.munggoo.quiz;
 
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.QuizDto;
+import com.mashup.munggoo.quiz.quizGenerator.Word;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,17 +22,17 @@ public class QuizRepositoryTest {
 
     private List<Quiz> savedQuiz;
 
-    private QuizDto quizDto;
+    private Word word;
 
     @Before
     public void setUp(){
         List<Quiz> quizList = new ArrayList<>();
 
-        quizDto = new QuizDto(1L,1L,1L,"content");
-        quizList.add(Quiz.from(quizDto));
+        word = new Word(1L,1L,1L,"content");
+        quizList.add(Quiz.from(word));
 
-        quizDto = new QuizDto(2L,2L,2L,"content2");
-        quizList.add(Quiz.from(quizDto));
+        word = new Word(2L,2L,2L,"content2");
+        quizList.add(Quiz.from(word));
 
         savedQuiz = quizRepository.saveAll(quizList);
     }

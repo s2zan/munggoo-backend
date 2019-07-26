@@ -6,6 +6,7 @@ import com.mashup.munggoo.highlight.ReqHighlightDto;
 import com.mashup.munggoo.quiz.controller.QuizController;
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.*;
+import com.mashup.munggoo.quiz.quizGenerator.Word;
 import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import org.junit.Before;
@@ -55,8 +56,8 @@ public class QuizControllerTest {
         highlights.add(new Highlight(fileId, new ReqHighlightDto(0L,4L,"종합 병원", 0)));
         highlights.add(new Highlight(fileId, new ReqHighlightDto(5L,9L,"호두과자", 0)));
         quizzes = new ArrayList<>();
-        quizzes.add(new Quiz(new QuizDto(1L, 0L, 4L, "종합 병원")));
-        quizzes.add(new Quiz(new QuizDto(1L, 5L, 9L, "호두과자")));
+        quizzes.add(new Quiz(new Word(1L, 0L, 4L, "종합 병원")));
+        quizzes.add(new Quiz(new Word(1L, 5L, 9L, "호두과자")));
 
         objectMapper = new ObjectMapper();
     }
@@ -64,7 +65,7 @@ public class QuizControllerTest {
     @Test
     public void createQuiz() throws Exception {
 //        when(highlightForQuizService.getHighlights(any())).thenReturn(highlights);
-        when(quizService.createQuiz(any())).thenReturn(quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList()));
+        when(quizService.createQuiz(any())).thenReturn(quizzes.stream().map(ResQuiz::new).collect(Collectors.toList()));
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
@@ -79,7 +80,7 @@ public class QuizControllerTest {
 
     @Test
     public void retakeQuiz() throws Exception{
-        when(quizService.getQuiz(any())).thenReturn(quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList()));
+        when(quizService.getQuiz(any())).thenReturn(quizzes.stream().map(ResQuiz::new).collect(Collectors.toList()));
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz/re", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
@@ -93,8 +94,8 @@ public class QuizControllerTest {
 
     @Test
     public void quizResult() throws Exception {
-        QuizDto quizDto = new QuizDto(1L, 1L, 1L, "Test");
-        Quiz quiz = Quiz.from(quizDto);
+        Word word = new Word(1L, 1L, 1L, "Test");
+        Quiz quiz = Quiz.from(word);
 
         ReqAnswerDto reqAnswerDto = new ReqAnswerDto("test");
         List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
@@ -115,7 +116,7 @@ public class QuizControllerTest {
                 .andExpect(jsonPath("$.score").value(1))
                 .andExpect(jsonPath("$.perfectScore").value(1))
                 .andExpect(jsonPath("$.result.[0].userAnswer").value(reqAnswerDtos.get(0).getUserAnswer()))
-                .andExpect(jsonPath("$.result.[0].realAnswer").value(quizDto.getContent()))
+                .andExpect(jsonPath("$.result.[0].realAnswer").value(word.getContent()))
                 .andExpect(jsonPath("$.result.[0].mark").value(1))
                 .andDo(print());
     }

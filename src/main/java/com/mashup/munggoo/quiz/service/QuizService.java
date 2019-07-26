@@ -4,7 +4,7 @@ import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.ResQuizDto;
+import com.mashup.munggoo.quiz.dto.ResQuiz;
 import com.mashup.munggoo.quiz.dto.Result;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
@@ -25,7 +25,7 @@ public class QuizService {
     private final HighlightForQuizService highlightForQuizService;
 
     @Transactional
-    public List<ResQuizDto> createQuiz(Long fileId){
+    public List<ResQuiz> createQuiz(Long fileId){
         List<Highlight> highlights = highlightForQuizService.getHighlights(fileId);
         if(highlights.isEmpty()){
             throw new NotFoundException("Highlight Does Not Exist.");
@@ -41,19 +41,19 @@ public class QuizService {
             throw new NotFoundException("Quiz Does Not Generated.");
         }
 
-        return quizRepository.saveAll(quizzes).stream().map(ResQuizDto::new).collect(Collectors.toList());
+        return quizRepository.saveAll(quizzes).stream().map(ResQuiz::new).collect(Collectors.toList());
     }
 
     private boolean quizAlreadyExist(Long fileId){
         return quizRepository.existsQuizzesByFileId(fileId);
     }
 
-    public List<ResQuizDto> getQuiz(Long fileId){
+    public List<ResQuiz> getQuiz(Long fileId){
         List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
         if (quizzes.isEmpty()) {
             throw new NotFoundException("Quiz Does Not Exist.");
         }
-        return quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList());
+        return quizzes.stream().map(ResQuiz::new).collect(Collectors.toList());
     }
 
     public ScoreDto marking(Long fileId, List<ReqAnswerDto> reqAnswerDtos){

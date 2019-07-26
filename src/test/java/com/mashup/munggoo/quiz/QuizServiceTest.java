@@ -4,10 +4,8 @@ import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.highlight.HighlightRepository;
 import com.mashup.munggoo.highlight.ReqHighlightDto;
-import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.QuizDto;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
-import com.mashup.munggoo.quiz.dto.ResQuizDto;
+import com.mashup.munggoo.quiz.dto.ResQuiz;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
 import com.mashup.munggoo.quiz.service.QuizService;
 import org.junit.Before;
@@ -74,7 +72,7 @@ public class QuizServiceTest {
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "호두과자", 0));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         highlights = highlightRepository.saveAll(highlights);
-        List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
+        List<ResQuiz> quizzes = quizService.createQuiz(fileId);
 
         assertThat(quizzes.size()).isEqualTo(2);
         assertThat(quizService.getQuiz(fileId).size()).isEqualTo(quizzes.size());
@@ -88,7 +86,7 @@ public class QuizServiceTest {
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕", 0));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         highlights = highlightRepository.saveAll(highlights);
-        List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
+        List<ResQuiz> quizzes = quizService.createQuiz(fileId);
 
         List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
         reqAnswerDtos.add(new ReqAnswerDto("Hello"));

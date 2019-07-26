@@ -2,7 +2,7 @@ package com.mashup.munggoo.quiz;
 
 import com.mashup.munggoo.quiz.domain.Quiz;
 import com.mashup.munggoo.quiz.dto.Result;
-import com.mashup.munggoo.quiz.dto.QuizDto;
+import com.mashup.munggoo.quiz.quizGenerator.Word;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
 import org.junit.Before;
@@ -19,12 +19,12 @@ public class ScoreTest {
     private List<Result> resultList;
     private ScoreDto scoreDto;
     private Quiz quiz;
-    private QuizDto quizDto;
+    private Word word;
 
     @Before
     public void setUp(){
-        quizDto = new QuizDto(1L, 1L, 1L, "Test");
-        quiz = Quiz.from(quizDto);
+        word = new Word(1L, 1L, 1L, "Test");
+        quiz = Quiz.from(word);
 
         reqAnswerDto = new ReqAnswerDto("test");
         resultList = new ArrayList<>();

@@ -1,8 +1,8 @@
 package com.mashup.munggoo.quiz;
 
 import com.mashup.munggoo.quiz.domain.Quiz;
-import com.mashup.munggoo.quiz.dto.QuizDto;
-import com.mashup.munggoo.quiz.dto.ResQuizDto;
+import com.mashup.munggoo.quiz.quizGenerator.Word;
+import com.mashup.munggoo.quiz.dto.ResQuiz;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,14 +10,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuizTest {
     private Quiz quiz;
-    private QuizDto quizDto;
-    private ResQuizDto resQuizDto;
+    private Word word;
+    private ResQuiz resQuiz;
 
     @Before
     public void setUp(){
-        quizDto = new QuizDto(1L, 1L, 1L, "content");
-        quiz = Quiz.from(quizDto);
-        resQuizDto = new ResQuizDto(quiz);
+        word = new Word(1L, 1L, 1L, "content");
+        quiz = Quiz.from(word);
+        resQuiz = new ResQuiz(quiz);
     }
 
     @Test
@@ -27,6 +27,6 @@ public class QuizTest {
 
     @Test
     public void constructResQuizDto() {
-        assertThat(resQuizDto.getEndIndex()).isEqualTo(1);
+        assertThat(resQuiz.getEndIndex()).isEqualTo(1);
     }
 }

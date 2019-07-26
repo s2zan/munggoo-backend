@@ -1,6 +1,6 @@
 package com.mashup.munggoo.quiz.domain;
 
-import com.mashup.munggoo.quiz.dto.QuizDto;
+import com.mashup.munggoo.quiz.quizGenerator.Word;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,13 +26,13 @@ public class Quiz {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    public Quiz(QuizDto quizDto) {
-        this.fileId = quizDto.getFileId();
-        this.startIndex = quizDto.getStartIndex();
-        this.endIndex = quizDto.getEndIndex();
-        this.content = quizDto.getContent();
+    public Quiz(Word word) {
+        this.fileId = word.getFileId();
+        this.startIndex = word.getStartIndex();
+        this.endIndex = word.getEndIndex();
+        this.content = word.getContent();
     }
-    public static Quiz from(QuizDto quizDto) {
-        return new Quiz(quizDto);
+    public static Quiz from(Word word) {
+        return new Quiz(word);
     }
 }
