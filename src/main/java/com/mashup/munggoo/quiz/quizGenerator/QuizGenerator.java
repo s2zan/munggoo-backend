@@ -43,6 +43,7 @@ public class QuizGenerator {
             List<Token> tokenList = analyzeResultList.getTokenList();
             GeneratedQuiz generatedQuiz = selectWords(tokenList);
             List<QuizDto> quizList = new ArrayList<>();
+
             for(Token word : generatedQuiz.selected){
                 quizList.add(tokenToQuizDto(word, highlight));
             }
@@ -76,7 +77,6 @@ public class QuizGenerator {
                 candidateQuiz.remove(newIdx);
             }
             if(selectedQuiz.size() < QuizConfig.quizNum){
-                System.out.println("add preliminary quiz");
                 cnt = (QuizConfig.quizNum - selectedQuiz.size() > preliminaryQuiz.size() ?
                         preliminaryQuiz.size() : QuizConfig.quizNum - selectedQuiz.size());
                 for(int i=0 ; i<cnt; i++){
@@ -182,7 +182,6 @@ public class QuizGenerator {
                 case "NN":
                 case "NNP":
                 case "NNSS":
-//                    System.out.printf("`%s(%s)`", token.getMorph(), token.getPos());
                     result.selected.add(token);
                     break;
                 case "SL":

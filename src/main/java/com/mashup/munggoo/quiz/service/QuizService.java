@@ -4,6 +4,7 @@ import com.mashup.munggoo.exception.ConflictException;
 import com.mashup.munggoo.exception.NotFoundException;
 import com.mashup.munggoo.highlight.Highlight;
 import com.mashup.munggoo.quiz.domain.Quiz;
+import com.mashup.munggoo.quiz.dto.ResQuizDto;
 import com.mashup.munggoo.quiz.dto.Result;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ScoreDto;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +25,7 @@ public class QuizService {
     private final HighlightForQuizService highlightForQuizService;
 
     @Transactional
-    public List<Quiz> createQuiz(Long fileId){
+    public List<ResQuizDto> createQuiz(Long fileId){
         List<Highlight> highlights = highlightForQuizService.getHighlights(fileId);
         if(highlights.isEmpty()){
             throw new NotFoundException("Highlight Does Not Exist.");
@@ -39,19 +41,19 @@ public class QuizService {
             throw new NotFoundException("Quiz Does Not Generated.");
         }
 
-        return quizRepository.saveAll(quizzes);
+        return quizRepository.saveAll(quizzes).stream().map(ResQuizDto::new).collect(Collectors.toList());
     }
 
     private boolean quizAlreadyExist(Long fileId){
         return quizRepository.existsQuizzesByFileId(fileId);
     }
 
-    public List<Quiz> getQuiz(Long fileId){
+    public List<ResQuizDto> getQuiz(Long fileId){
         List<Quiz> quizzes = quizRepository.findByFileIdOrderByStartIndex(fileId);
         if (quizzes.isEmpty()) {
             throw new NotFoundException("Quiz Does Not Exist.");
         }
-        return quizzes;
+        return quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList());
     }
 
     public ScoreDto marking(Long fileId, List<ReqAnswerDto> reqAnswerDtos){
