@@ -44,7 +44,6 @@ public class HighlightServiceTest {
 
     @Test
     public void saveHighlights() {
-        // 비어있는 상태에서 저장
         reqHighlightDtos = new ArrayList<>();
         reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
@@ -55,16 +54,19 @@ public class HighlightServiceTest {
         assertThat(savedHighlights.getHighlights().size()).isEqualTo(reqHighlightDtos.size());
         assertThat(savedHighlights.getHighlights().get(0).getStartIndex()).isEqualTo(10L);
         assertThat(savedHighlights.getHighlights().get(1).getStartIndex()).isEqualTo(30L);
+    }
 
-        // 이미 하이라이트 있는 상태에서 저장
+    @Test
+    public void saveHighlightsAlreadyExist() {
         reqHighlightDtos = new ArrayList<>();
         reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         reqHighlightDtos.add(new ReqHighlightDto(40L, 50L, "냠냠", 0));
         List<Highlight> newHighlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         given(highlightRepository.saveAll(anyCollection())).willReturn(newHighlights);
         given(highlightRepository.findByFileId(any())).willReturn(highlights);
-        savedHighlights = highlightService.save(fileId, new ReqHighlightsDto(reqHighlightDtos));
+        HighlightsDto savedHighlights = highlightService.save(fileId, new ReqHighlightsDto(reqHighlightDtos));
         assertThat(savedHighlights.getHighlights().size()).isEqualTo(reqHighlightDtos.size());
         assertThat(savedHighlights.getHighlights().get(0).getStartIndex()).isEqualTo(10L);
         assertThat(savedHighlights.getHighlights().get(1).getStartIndex()).isEqualTo(30L);
