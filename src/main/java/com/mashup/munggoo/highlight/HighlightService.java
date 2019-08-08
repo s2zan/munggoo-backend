@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -17,6 +16,10 @@ public class HighlightService {
     public HighlightsDto save(Long fileId, ReqHighlightsDto reqHighlightsDto) {
         if (reqHighlightsDto.getHighlights().isEmpty()) {
             throw new BadRequestException("Request Body Is Empty.");
+        }
+        List<Highlight> highlights = highlightRepository.findByFileId(fileId);
+        if (!highlights.isEmpty()) {
+            highlightRepository.deleteAllByFileId(fileId);
         }
         return new HighlightsDto(highlightRepository.saveAll(reqHighlightsDto.getHighlights().stream()
                 .map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto))
@@ -29,15 +32,5 @@ public class HighlightService {
             throw new NotFoundException("Highlight Does Not Exist.");
         }
         return new ResHighlightsDto(highlights.stream().map(ResHighlightDto::new).collect(Collectors.toList()));
-    }
-
-    public Highlight deleteHighlight(Long id) {
-        Optional<Highlight> highlight = highlightRepository.findById(id);
-        if (highlight.isPresent()) {
-            highlightRepository.deleteById(id);
-            return highlight.get();
-        } else {
-            throw new NotFoundException("Highlight Does Not Exist.");
-        }
     }
 }
