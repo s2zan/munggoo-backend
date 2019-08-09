@@ -31,7 +31,7 @@ public class HighlightService {
     public ResHighlightsDto getHighlights(Long fileId) {
         List<Highlight> highlights = highlightRepository.findByFileId(fileId);
         if (highlights.isEmpty()) {
-            throw new NotFoundException("Highlight Doses Not Exist.");
+            throw new NotFoundException("Highlight Does Not Exist.");
         }
         return new ResHighlightsDto(highlights.stream().map(ResHighlightDto::new).collect(Collectors.toList()));
     }
