@@ -4,6 +4,7 @@ import com.mashup.munggoo.exception.BadRequestException;
 import com.mashup.munggoo.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,13 +14,14 @@ import java.util.stream.Collectors;
 public class HighlightService {
     private final HighlightRepository highlightRepository;
 
+    @Transactional
     public HighlightsDto save(Long fileId, ReqHighlightsDto reqHighlightsDto) {
         if (reqHighlightsDto.getHighlights().isEmpty()) {
             throw new BadRequestException("Request Body Is Empty.");
         }
         List<Highlight> highlights = highlightRepository.findByFileId(fileId);
         if (!highlights.isEmpty()) {
-            highlightRepository.deleteAllByFileId(fileId);
+            highlightRepository.deleteByFileId(fileId);
         }
         return new HighlightsDto(highlightRepository.saveAll(reqHighlightsDto.getHighlights().stream()
                 .map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto))

@@ -58,7 +58,7 @@ public class HighlightRepositoryTest {
         reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
         highlights.addAll(reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId + 1, reqHighlightDto)).collect(Collectors.toList()));
         highlightRepository.saveAll(highlights);
-        highlightRepository.deleteAllByFileId(fileId);
+        highlightRepository.deleteByFileId(fileId);
         List<Highlight> savedHighlights1 = highlightRepository.findByFileId(fileId);
         List<Highlight> savedHighlights2 = highlightRepository.findByFileId(fileId + 1);
         assertThat(savedHighlights1.size()).isEqualTo(0);
