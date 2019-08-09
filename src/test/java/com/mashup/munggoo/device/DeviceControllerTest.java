@@ -2,6 +2,7 @@ package com.mashup.munggoo.device;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashup.munggoo.exception.ConflictException;
+import com.mashup.munggoo.exception.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,6 +31,8 @@ public class DeviceControllerTest {
 
     private Device device;
 
+    private ResDeviceIdDto resDeviceIdDto;
+
     private ReqDeviceDto reqDeviceDto;
 
     private ObjectMapper objectMapper;
@@ -37,6 +41,7 @@ public class DeviceControllerTest {
     public void setUp() {
         reqDeviceDto = new ReqDeviceDto("qwer1234");
         device = Device.from(reqDeviceDto);
+        resDeviceIdDto = new ResDeviceIdDto(device);
         objectMapper = new ObjectMapper();
     }
 
@@ -64,6 +69,34 @@ public class DeviceControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.code").value("409"))
                 .andExpect(jsonPath("$.msg").value("Duplicated Device."))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andDo(print());
+    }
+
+
+
+    @Test
+    public void getDeviceId() throws Exception {
+        when(deviceService.getDeviceId(any())).thenReturn(resDeviceIdDto);
+        mockMvc.perform(get("/v1/devices/{device-key}", "test")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(reqDeviceDto)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(device.getId()))
+                .andDo(print());
+    }
+
+    @Test
+    public void getDeviceIdDoesNotExist() throws Exception {
+        when(deviceService.getDeviceId(any())).thenThrow(new NotFoundException("Device Does Not Exist."));
+        mockMvc.perform(get("/v1/devices/{device-key}", "test")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(reqDeviceDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.msg").value("Device Does Not Exist."))
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andDo(print());
     }

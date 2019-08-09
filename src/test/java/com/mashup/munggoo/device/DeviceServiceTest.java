@@ -1,6 +1,7 @@
 package com.mashup.munggoo.device;
 
 import com.mashup.munggoo.exception.ConflictException;
+import com.mashup.munggoo.exception.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,5 +41,17 @@ public class DeviceServiceTest {
     public void saveDuplicatedDevice() {
         given(deviceRepository.existsByDeviceKey(any())).willReturn(Boolean.TRUE);
         deviceService.save(reqDeviceDto);
+    }
+
+    @Test
+    public void getDeviceId() {
+        given(deviceRepository.findByDeviceKey(any())).willReturn(Device.from(reqDeviceDto));
+        assertThat(deviceService.getDeviceId("test").equals(new ResDeviceIdDto(Device.from(reqDeviceDto))));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getDeviceIdDoesNotExist() {
+        given(deviceRepository.findByDeviceKey(any())).willReturn(null);
+        deviceService.getDeviceId("test");
     }
 }

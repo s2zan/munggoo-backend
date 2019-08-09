@@ -3,10 +3,7 @@ package com.mashup.munggoo.device;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,5 +14,10 @@ public class DeviceController {
     @PostMapping
     public ResponseEntity<Device> saveDevice(@RequestBody ReqDeviceDto reqDeviceDto) {
         return ResponseEntity.status(HttpStatus.OK).body(deviceService.save(reqDeviceDto));
+    }
+
+    @GetMapping("/{device-key}")
+    public ResponseEntity<ResDeviceIdDto> getDeviceId(@PathVariable(value="device-key") String deviceKey) {
+        return ResponseEntity.status(HttpStatus.OK).body(deviceService.getDeviceId(deviceKey));
     }
 }
