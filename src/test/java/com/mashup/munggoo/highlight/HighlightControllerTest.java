@@ -55,8 +55,8 @@ public class HighlightControllerTest {
     @Test
     public void saveHighlights() throws Exception {
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕",   Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", Boolean.FALSE));
         reqHighlightsDto = new ReqHighlightsDto(reqHighlightDtos);
         highlightsDto = new HighlightsDto(reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList()));
         when(highlightService.save(any(), any())).thenReturn(highlightsDto);
@@ -102,8 +102,8 @@ public class HighlightControllerTest {
     @Test
     public void getHighlights() throws Exception {
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", Boolean.FALSE));
         highlightsDto = new HighlightsDto(reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList()));
         resHighlightsDto = new ResHighlightsDto(highlightsDto.getHighlights().stream().map(ResHighlightDto::new).collect(Collectors.toList()));
         when(highlightService.getHighlights(fileId)).thenReturn(resHighlightsDto);

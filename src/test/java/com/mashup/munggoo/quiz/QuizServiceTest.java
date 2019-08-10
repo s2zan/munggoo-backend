@@ -50,8 +50,8 @@ public class QuizServiceTest {
     @Test
     public void getHighlights(){
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "hello", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "hello", Boolean.FALSE));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         highlights = highlightRepository.saveAll(highlights);
 
@@ -68,8 +68,8 @@ public class QuizServiceTest {
     @Test
     public void createAndGetQuiz(){
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "종합 병원", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "호두과자", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "종합 병원", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "호두과자", Boolean.FALSE));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         highlights = highlightRepository.saveAll(highlights);
         List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
@@ -82,8 +82,8 @@ public class QuizServiceTest {
     public void marking(){
 
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "hello", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "hello", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕", Boolean.FALSE));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         highlights = highlightRepository.saveAll(highlights);
         List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
