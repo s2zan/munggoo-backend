@@ -38,7 +38,7 @@ public class Highlight {
         this.endIndex = reqHighlightDto.getEndIndex();
         this.content = reqHighlightDto.getContent();
         this.type = reqHighlightDto.stringToEnum(reqHighlightDto.getContent());
-        this.isImportant = reqHighlightDto.integerToBoolean(reqHighlightDto.getIsImportant());
+        this.isImportant = reqHighlightDto.getIsImportant();
     }
 
     public static Highlight from(Long fileId, ReqHighlightDto reqHighlightDto) {

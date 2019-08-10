@@ -11,13 +11,9 @@ public class ReqHighlightDto {
     private Long startIndex;
     private Long endIndex;
     private String content;
-    private Integer isImportant;
+    private Boolean isImportant;
 
     public HighlightType stringToEnum(String content) {
         return (content.split(" ").length > 1) ? HighlightType.SENTENCE : HighlightType.WORD;
-    }
-
-    public Boolean integerToBoolean(Integer isImportant) {
-        return isImportant != 0;
     }
 }
