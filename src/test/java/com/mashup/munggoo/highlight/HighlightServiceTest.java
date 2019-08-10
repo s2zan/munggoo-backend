@@ -45,8 +45,8 @@ public class HighlightServiceTest {
     @Test
     public void saveHighlights() {
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", Boolean.FALSE));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         given(highlightRepository.findByFileId(any())).willReturn(new ArrayList<>());
         given(highlightRepository.saveAll(anyCollection())).willReturn(highlights);
@@ -59,10 +59,10 @@ public class HighlightServiceTest {
     @Test
     public void saveHighlightsAlreadyExist() {
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", Boolean.FALSE));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        reqHighlightDtos.add(new ReqHighlightDto(40L, 50L, "냠냠", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(40L, 50L, "냠냠", Boolean.FALSE));
         List<Highlight> newHighlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         given(highlightRepository.saveAll(anyCollection())).willReturn(newHighlights);
         given(highlightRepository.findByFileId(any())).willReturn(highlights);
@@ -81,8 +81,8 @@ public class HighlightServiceTest {
     @Test
     public void getHighlights() {
         reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", 1));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0));
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", Boolean.FALSE));
         highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
         given(highlightRepository.findByFileId(any())).willReturn(highlights);
         resHighlightsDto = highlightService.getHighlights(fileId);

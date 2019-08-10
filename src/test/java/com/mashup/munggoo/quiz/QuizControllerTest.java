@@ -53,8 +53,8 @@ public class QuizControllerTest {
     @Before
     public void setUp(){
         highlights = new ArrayList<>();
-        highlights.add(new Highlight(fileId, new ReqHighlightDto(0L,4L,"종합 병원", 0)));
-        highlights.add(new Highlight(fileId, new ReqHighlightDto(5L,9L,"호두과자", 0)));
+        highlights.add(new Highlight(fileId, new ReqHighlightDto(0L,4L,"종합 병원", Boolean.FALSE)));
+        highlights.add(new Highlight(fileId, new ReqHighlightDto(5L,9L,"호두과자", Boolean.FALSE)));
         quizzes = new ArrayList<>();
         quizzes.add(new Quiz(new Word(1L, 0L, 4L, "종합 병원")));
         quizzes.add(new Quiz(new Word(1L, 5L, 9L, "호두과자")));
@@ -77,7 +77,7 @@ public class QuizControllerTest {
     }
 
     @Test
-    public void retakeQuiz() throws Exception{
+    public void retakeQuiz() throws Exception {
         when(quizService.getQuiz(any())).thenReturn(quizzes.stream().map(ResQuizDto::new).collect(Collectors.toList()));
         mockMvc.perform(get("/v1/devices/{device-id}/files/{file-id}/quiz/re", 1L, fileId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
