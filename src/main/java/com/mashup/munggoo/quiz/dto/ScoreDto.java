@@ -1,14 +1,10 @@
 package com.mashup.munggoo.quiz.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ScoreDto {
     private Integer score;
     private Integer perfectScore;
@@ -19,5 +15,4 @@ public class ScoreDto {
         perfectScore = anwerDtoList.size();
         result = anwerDtoList;
     }
-
 }

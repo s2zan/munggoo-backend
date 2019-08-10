@@ -16,9 +16,9 @@ public class HighlightTest {
 
     @Before
     public void setUp() {
-        reqHighlightDto = new ReqHighlightDto(10L, 20L, "안녕", 1);
+        reqHighlightDto = new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE);
         highlight = Highlight.from(1L, reqHighlightDto);
-        reqHighlightDto2 = new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", 0);
+        reqHighlightDto2 = new ReqHighlightDto(30L, 40L, "안녕하세요 반갑습니다.", Boolean.FALSE);
         highlight2 = Highlight.from(2L, reqHighlightDto2);
     }
 
