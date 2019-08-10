@@ -21,8 +21,4 @@ public class Result {
             mark = (tempUser.equals(temp[0]) ||tempUser.equals(temp[1]))? 1 : 0;
         }
     }
-
-    public Result from(ReqAnswerDto reqAnswerDto, Quiz quiz){
-        return new Result(reqAnswerDto, quiz);
-    }
 }
