@@ -7,6 +7,7 @@ import com.mashup.munggoo.highlight.ReqHighlightDto;
 import com.mashup.munggoo.quiz.dto.ReqAnswerDto;
 import com.mashup.munggoo.quiz.dto.ResQuizDto;
 import com.mashup.munggoo.quiz.repository.QuizRepository;
+import com.mashup.munggoo.quiz.service.HighlightForQuizService;
 import com.mashup.munggoo.quiz.service.QuizService;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +30,14 @@ public class QuizServiceTest {
     private QuizService quizService;
 
     @Autowired
+    private HighlightForQuizService highlightForQuizService;
+
+    @Autowired
     private QuizRepository quizRepository;
 
     @Autowired
     private HighlightRepository highlightRepository;
+
 
 
     private List<ReqHighlightDto> reqHighlightDtos;
@@ -44,16 +49,18 @@ public class QuizServiceTest {
     public void setUp() {
         quizRepository.deleteAll();
         highlightRepository.deleteAll();
+
+        reqHighlightDtos = new ArrayList<>();
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "종합 병원", Boolean.TRUE));
+        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "호두과자", Boolean.FALSE));
+        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
+        highlightRepository.saveAll(highlights);
     }
 
 
     @Test
     public void getHighlights(){
-        reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "안녕", Boolean.TRUE));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "hello", Boolean.FALSE));
-        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        highlights = highlightRepository.saveAll(highlights);
+        highlights = highlightForQuizService.getHighlights(fileId);
 
         assertThat(highlights.size()).isEqualTo(reqHighlightDtos.size());
         assertThat(highlights.get(0).getStartIndex()).isEqualTo(reqHighlightDtos.get(0).getStartIndex());
@@ -66,33 +73,43 @@ public class QuizServiceTest {
     }
 
     @Test
-    public void createAndGetQuiz(){
-        reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "종합 병원", Boolean.TRUE));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "호두과자", Boolean.FALSE));
-        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        highlights = highlightRepository.saveAll(highlights);
+    public void createQuiz(){
         List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
 
         assertThat(quizzes.size()).isEqualTo(2);
-        assertThat(quizService.getQuiz(fileId).size()).isEqualTo(quizzes.size());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void createQuizWithEmptyHighlight(){
+        quizService.createQuiz(fileId + 1);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void createQuizButNotGenerated(){
+        reqHighlightDtos = new ArrayList<>();
+        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "*? #$@", Boolean.TRUE));
+        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId + 1, reqHighlightDto)).collect(Collectors.toList());
+        highlightRepository.saveAll(highlights);
+
+        quizService.createQuiz(fileId + 1);
     }
 
     @Test
     public void marking(){
-
-        reqHighlightDtos = new ArrayList<>();
-        reqHighlightDtos.add(new ReqHighlightDto(10L, 20L, "hello", Boolean.TRUE));
-        reqHighlightDtos.add(new ReqHighlightDto(30L, 40L, "안녕", Boolean.FALSE));
-        highlights = reqHighlightDtos.stream().map(reqHighlightDto -> Highlight.from(fileId, reqHighlightDto)).collect(Collectors.toList());
-        highlights = highlightRepository.saveAll(highlights);
         List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
 
         List<ReqAnswerDto> reqAnswerDtos = new ArrayList<>();
-        reqAnswerDtos.add(new ReqAnswerDto("Hello"));
+        reqAnswerDtos.add(new ReqAnswerDto("종합 병원"));
         reqAnswerDtos.add(new ReqAnswerDto("안녕"));
 
         quizService.marking(fileId, reqAnswerDtos);
+    }
+
+    @Test
+    public void getQuiz(){
+        List<ResQuizDto> quizzes = quizService.createQuiz(fileId);
+
+        assertThat(quizService.getQuiz(fileId).size()).isEqualTo(2);
     }
 
     @Test(expected = NotFoundException.class)
