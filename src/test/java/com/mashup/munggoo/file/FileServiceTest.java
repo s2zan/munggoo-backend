@@ -38,7 +38,7 @@ public class FileServiceTest {
 
     @Test
     public void saveFile() {
-        given(fileRepository.existsByName(reqFileDto.getName())).willReturn(Boolean.FALSE);
+        given(fileRepository.existsByNameAndDeviceId(reqFileDto.getName(), deviceId)).willReturn(Boolean.FALSE);
         given(fileRepository.save(any())).willReturn(File.from(deviceId, reqFileDto));
         assertThat(fileService.save(deviceId, reqFileDto).getDeviceId()).isEqualTo(deviceId);
         assertThat(fileService.save(deviceId, reqFileDto).getName()).isEqualTo(reqFileDto.getName());
@@ -46,7 +46,7 @@ public class FileServiceTest {
 
     @Test(expected = ConflictException.class)
     public void saveDuplicatedFileName() {
-        given(fileRepository.existsByName(reqFileDto.getName())).willReturn(Boolean.TRUE);
+        given(fileRepository.existsByNameAndDeviceId(reqFileDto.getName(), deviceId)).willReturn(Boolean.TRUE);
         fileService.save(deviceId, reqFileDto);
     }
 
