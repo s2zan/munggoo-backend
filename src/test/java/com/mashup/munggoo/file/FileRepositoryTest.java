@@ -33,7 +33,7 @@ public class FileRepositoryTest {
     @Test
     public void existsFileByFileName() {
         fileRepository.save(file);
-        assertThat(fileRepository.existsByName(reqFileDto.getName())).isTrue();
+        assertThat(fileRepository.existsByNameAndDeviceId(reqFileDto.getName(), deviceId)).isTrue();
     }
 
     @Test
