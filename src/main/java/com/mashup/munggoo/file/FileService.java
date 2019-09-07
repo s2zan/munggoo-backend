@@ -14,7 +14,7 @@ public class FileService {
     private final FileRepository fileRepository;
 
     public File save(Long deviceId, ReqFileDto reqFileDto) {
-        if (isFileName(reqFileDto.getName())) {
+        if (isFileName(reqFileDto.getName(), deviceId)) {
             throw new ConflictException("Duplicated File Name.");
         }
         return fileRepository.save(File.from(deviceId, reqFileDto));
@@ -28,7 +28,7 @@ public class FileService {
         return new ResFilesDto(files.stream().map(ResFileDto::new).collect(Collectors.toList()));
     }
 
-    private Boolean isFileName(String name) {
-        return fileRepository.existsByName(name);
+    private Boolean isFileName(String name, Long deviceId) {
+        return fileRepository.existsByNameAndDeviceId(name, deviceId);
     }
 }

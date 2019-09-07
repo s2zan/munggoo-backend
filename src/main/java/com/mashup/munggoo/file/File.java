@@ -16,7 +16,7 @@ public class File {
     @Column(name = "device_id", nullable = false)
     private Long deviceId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     public File(Long deviceId, ReqFileDto reqFileDto) {
