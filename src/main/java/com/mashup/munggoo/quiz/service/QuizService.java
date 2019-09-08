@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,7 @@ public class QuizService {
             throw new NotFoundException("Quiz Does Not Generated.");
         }
 
+        quizzes.sort(Comparator.comparing(Quiz::getStartIndex));
         return quizRepository.saveAll(quizzes).stream().map(ResQuizDto::new).collect(Collectors.toList());
     }
 
