@@ -44,7 +44,7 @@ public class QuizGenerator {
             List<Word> quizList = new ArrayList<>();
 
             for(Token word : generatedQuiz.selected){
-                quizList.add(tokenToQuizDto(word, highlight));
+                quizList.add(tokenToWord(word, highlight));
             }
             if(highlight.getIsImportant()) {
                 if(quizList.size() > 0) {
@@ -62,7 +62,7 @@ public class QuizGenerator {
             candidateQuiz.addAll(quizList);
             if(selectedQuiz.size()+candidateQuiz.size() < QuizConfig.quizNum) {
                 for(Token word : generatedQuiz.preliminary){
-                    preliminaryQuiz.add(tokenToQuizDto(word, highlight));
+                    preliminaryQuiz.add(tokenToWord(word, highlight));
                 }
             }
         }
@@ -203,11 +203,11 @@ public class QuizGenerator {
         return first;
     }
 
-    private static Word tokenToQuizDto(Token token, Highlight highlight){
+    private static Word tokenToWord(Token token, Highlight highlight){
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
         return new Word(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),
-                highlight.getStartIndex() + token.getEndIndex(),
+                highlight.getStartIndex() + token.getEndIndex() - 1,
                 content);
     }
 
@@ -215,7 +215,7 @@ public class QuizGenerator {
         String content = highlight.getContent().substring(token.getBeginIndex(), token.getEndIndex());
         return Quiz.from(new Word(highlight.getFileId(),
                 highlight.getStartIndex() + token.getBeginIndex(),
-                highlight.getStartIndex() + token.getEndIndex(),
+                highlight.getStartIndex() + token.getEndIndex() - 1,
                 content));
     }
 }
